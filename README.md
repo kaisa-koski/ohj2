@@ -1,6 +1,8 @@
-# pohja
+#Ohjelmointi 2-kurssin harjoitustyö
 
-Pohja kevään 2021 harjoitustöiden GIT-repoille
+## MtG-pakkarekisteri
 
-Lue käyttöohjeet TIMistä: <https://tim.jyu.fi/view/kurssit/tie/ohj2/tyokalut/git/ohj2git#fork>
+Ohjelman tarkoitus on auttaa käyttäjää hallitsemaan tietoja omistamistaan fyysisistä Magic the Gathering -pelikorteista ja niiden sijainneista. Pelaajalla voi olla yksi ja sama kortti monessa pelipakassa, jolloin sen fyysisen sijainnin saattaa helposti unohtaa ja kortin löytääkseen joutuu selaamaan pakat läpi. Tällä ohjelmalla kortin sijainnin löytäminen on helppoa. Halutessaan pelata jollain pakalla ohjelma kertoo, mitkä kortit fyysiseen pakkaan pitää lisätä, ja mistä ne löytyvät. Ohjelmasta saa myös tulostettavan/tallennettavan listauksen pakan korteista.
+
+
 
