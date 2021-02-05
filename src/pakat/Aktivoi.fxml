@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import fi.jyu.mit.fxgui.CheckBoxChooser?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <Label prefHeight="53.0" prefWidth="334.0" text="Olet aktivoimassa pakan: Kefnet. Siirrä pakkaan seuraavat kortit" BorderPane.alignment="CENTER" />
+   </top>
+   <bottom>
+      <HBox prefHeight="56.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" mnemonicParsing="false" text="Peruuta">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="70.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Valmis">
+               <HBox.margin>
+                  <Insets bottom="20.0" left="70.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </bottom>
+   <center>
+      <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <VBox prefHeight="207.0" prefWidth="559.0">
+               <children>
+                  <Label text="Izzet Control (Sininen kotelo)" />
+                  <CheckBoxChooser rivit="Jace, the Mind Sculptor (1 kpl)&#10;Snapcaster Mage (2 kpl)&#10;&#10;&#10;" />
+               </children>
+               <HBox.margin>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </HBox.margin>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+</BorderPane>
