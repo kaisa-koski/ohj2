@@ -9,19 +9,19 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pakat.AktivoiController">
    <top>
-      <Label prefHeight="53.0" prefWidth="334.0" text="Olet aktivoimassa pakan: Kefnet. Siirrä pakkaan seuraavat kortit" BorderPane.alignment="CENTER" />
+      <Label fx:id="labelOhje" prefHeight="53.0" prefWidth="334.0" text="Olet aktivoimassa pakan: Kefnet. Siirrä pakkaan seuraavat kortit" BorderPane.alignment="CENTER" />
    </top>
    <bottom>
       <HBox prefHeight="56.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Button alignment="CENTER" mnemonicParsing="false" text="Peruuta">
+            <Button alignment="CENTER" mnemonicParsing="false" onAction="#handlePeruuta" text="Peruuta">
                <HBox.margin>
                   <Insets bottom="20.0" left="70.0" right="20.0" top="20.0" />
                </HBox.margin>
             </Button>
-            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" text="Valmis">
+            <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#handleValmis" text="Valmis">
                <HBox.margin>
                   <Insets bottom="20.0" left="70.0" right="20.0" top="20.0" />
                </HBox.margin>

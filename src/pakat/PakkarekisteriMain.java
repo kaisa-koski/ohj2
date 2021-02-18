@@ -8,8 +8,10 @@ import javafx.fxml.FXMLLoader;
 
 
 /**
- * @author kaisa
- * @version 3.2.2021
+ * Pakkarekisterin pääluokka. Avaa pääikkunan ohjelman käynnistyessä.
+ * 
+ * @author Kaisa Koski
+ * @version 16.2.2021
  *
  */
 public class PakkarekisteriMain extends Application {
@@ -30,7 +32,7 @@ public class PakkarekisteriMain extends Application {
     }
 
     /**
-     * @param args Ei k�yt�ss�
+     * @param args Ei käytössä
      */
     public static void main(String[] args) {
         launch(args);

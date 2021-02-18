@@ -11,12 +11,12 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pakat.PoistaPakastaController">
    <top>
       <VBox prefHeight="55.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" prefHeight="29.0" prefWidth="600.0" text="Olet poistamassa kortteja pakasta:" />
-            <Label alignment="CENTER" prefHeight="28.0" prefWidth="400.0" text="Izzet Control" />
+            <Label alignment="CENTER" prefHeight="28.0" prefWidth="400.0" fx:id="labelPakka" text="Izzet Control" />
          </children>
       </VBox>
    </top>
@@ -34,12 +34,12 @@
    <bottom>
       <HBox prefHeight="79.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Button mnemonicParsing="false" text="Peruuta">
+            <Button mnemonicParsing="false" onAction="#handlePeruuta" text="Peruuta">
                <HBox.margin>
                   <Insets bottom="30.0" left="80.0" right="30.0" top="30.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Poista pakasta">
+            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" onAction="#handlePoista" text="Poista pakasta">
                <HBox.margin>
                   <Insets bottom="30.0" left="80.0" right="30.0" top="30.0" />
                </HBox.margin>

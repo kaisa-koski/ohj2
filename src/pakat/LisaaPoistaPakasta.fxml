@@ -6,17 +6,16 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pakat.LisaaPoistaPakastaController">
    <left>
-      <Button mnemonicParsing="false" text="Poista kortteja" BorderPane.alignment="CENTER">
+      <Button mnemonicParsing="false" onAction="#handelPoista" text="Poista kortteja" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
          </BorderPane.margin>
       </Button>
    </left>
    <right>
-      <Button mnemonicParsing="false" text="Lisää kortteja" BorderPane.alignment="CENTER">
+      <Button mnemonicParsing="false" onAction="#handleLisaa" text="Lisää kortteja" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
          </BorderPane.margin>
@@ -26,12 +25,12 @@
       <VBox prefHeight="46.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="300.0" text="Olet muokkaamassa seuraavan pakan kortteja:" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="299.0" text="Izzet Control" textAlignment="CENTER" />
+            <Label fx:id="textPakanNimi" alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="299.0" text="Izzet Control" textAlignment="CENTER" />
          </children>
       </VBox>
    </top>
    <bottom>
-      <Button mnemonicParsing="false" text="Peruuta" BorderPane.alignment="CENTER">
+      <Button mnemonicParsing="false" onAction="#handlePeruuta" text="Peruuta" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
          </BorderPane.margin>

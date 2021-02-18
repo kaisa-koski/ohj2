@@ -25,43 +25,46 @@
               <items>
                   <Menu mnemonicParsing="false" text="Näytä">
                     <items>
-                      <MenuItem mnemonicParsing="false" text="Kaikki" />
-                      <MenuItem mnemonicParsing="false" text="Modern" />
-                        <MenuItem mnemonicParsing="false" text="Standard" />
-                        <MenuItem mnemonicParsing="false" text="Pioner" />
-                        <MenuItem mnemonicParsing="false" text="Commander" />
-                        <MenuItem mnemonicParsing="false" text="Muut" />
+                      <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Kaikki" />
+                      <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Modern" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Standard" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Pioner" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Commander" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleNaytaPakat" text="Muut" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" text="Lisää uusi" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleUusiPakka" text="Lisää uusi" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Kortit">
               <items>
-                <MenuItem mnemonicParsing="false" text="Lisää uusi" />
+                <MenuItem mnemonicParsing="false" onAction="#handleUusiKortti" text="Lisää uusi" />
               </items>
             </Menu>
-          <Menu mnemonicParsing="false" text="Listaa" />
+          <Menu mnemonicParsing="false" text="Listaa">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleListaa" text="Listaa" />
+               </items></Menu>
           <Menu mnemonicParsing="false" text="Info">
             <items>
-              <MenuItem mnemonicParsing="false" text="Ohjeita" />
-                  <MenuItem mnemonicParsing="false" text="Tietoja" />
+              <MenuItem mnemonicParsing="false" onAction="#handleOhjeita" text="Ohjeita" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleTietoja" text="Tietoja" />
             </items>
           </Menu>
         </menus>
       </MenuBar>
    </top>
    <left>
-      <BorderPane prefHeight="300.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="300.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <center>
             <ScrollPane fitToHeight="true" prefHeight="300.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <content>
-                  <ListChooser prefHeight="311.0" prefWidth="198.0" rivit="Izzet Control&#10;Delver&#10;Kefnet&#10;Ei pakassa&#10;Kaikki kortit" />
+                  <ListChooser fx:id="listPakat" onMouseReleased="#handlePakka" prefHeight="365.0" prefWidth="250.0" rivit="Izzet Control&#10;Delver&#10;Kefnet&#10;Ei pakassa&#10;Kaikki kortit" />
                </content>
             </ScrollPane>
          </center>
          <top>
-            <HBox prefHeight="41.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="45.0" prefWidth="203.0" BorderPane.alignment="CENTER">
                <children>
                   <Label prefHeight="25.0" prefWidth="86.0" text="PAKAT">
                      <font>
@@ -71,7 +74,7 @@
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Label>
-                  <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Uusi pakka">
+                  <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleUusiPakka" prefHeight="25.0" prefWidth="80.0" text="Uusi pakka">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -82,7 +85,7 @@
       </BorderPane>
    </left>
    <center>
-      <BorderPane prefHeight="300.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+      <BorderPane prefHeight="425.0" prefWidth="290.0" BorderPane.alignment="CENTER">
          <top>
             <GridPane BorderPane.alignment="CENTER">
                <columnConstraints>
@@ -103,13 +106,13 @@
                   <Label text="Tyyppi: " GridPane.halignment="LEFT" GridPane.rowIndex="2" />
                   <Label text="Muistiinpanot:" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
                   <Label text="Modern" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" prefWidth="80.0" text="Aktiivinen" textFill="#0bbc17" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#handleAktivoi" prefWidth="80.0" text="Aktiivinen" textFill="#0bbc17" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin>
                   </Button>
                   <Label text="Sininen kotelo" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
-                  <Button mnemonicParsing="false" prefWidth="80.0" text="Muokkaa " GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+                  <Button mnemonicParsing="false" onAction="#handleMuokkausPakka" prefWidth="80.0" text="Muokkaa " GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER">
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin>
@@ -119,7 +122,7 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Button mnemonicParsing="false" prefWidth="80.0" text="Lisää/Poista" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
+                  <Button mnemonicParsing="false" onAction="#handleLisaaPoistaKortti" prefWidth="80.0" text="Lisää/Poista" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="CENTER" />
                   <Label alignment="BOTTOM_LEFT" text="PAKAN TIEDOT">
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -135,9 +138,9 @@
             </GridPane>
          </top>
          <center>
-            <ScrollPane prefHeight="200.0" prefWidth="203.0" BorderPane.alignment="CENTER">
+            <ScrollPane BorderPane.alignment="CENTER">
                <content>
-                  <ListChooser prefHeight="192.0" prefWidth="238.0" rivit="Jace, the Mind Sculptor (1)&#10;Serum Visions (1)&#10;Snapcaster Mage (2)" />
+                  <ListChooser fx:id="listKortit" onMouseClicked="#handleKortti" prefHeight="192.0" prefWidth="248.0" rivit="Jace, the Mind Sculptor (1)&#10;Serum Visions (1)&#10;Snapcaster Mage (2)" />
                </content>
             </ScrollPane>
          </center>
@@ -148,12 +151,12 @@
          <top>
             <HBox prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="88.0" text="Uusi kortti">
+                  <Button mnemonicParsing="false" onAction="#handleUusiKortti" prefHeight="25.0" prefWidth="88.0" text="Uusi kortti">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
                   </Button>
-                  <TextField alignment="CENTER_RIGHT" promptText="Hae korttia">
+                  <TextField fx:id="textHaku" alignment="CENTER_RIGHT" onAction="#handleHaku" promptText="Hae korttia">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>
@@ -172,11 +175,11 @@
                   <Label text="Jace, the Mind Sculptor" />
                   <Label text="Cmc: 4" />
                   <Label text="Omistuksessa: 1 kpl" />
-                  <Button mnemonicParsing="false" text="Muokkaa" />
+                  <Button mnemonicParsing="false" onAction="#handleMuokkausKortti" text="Muokkaa" />
                   <Label text="Sijainnit:" />
-                  <ListChooser prefHeight="72.0" prefWidth="248.0" rivit="Izzet Control (1 kpl)&#10;" />
+                  <ListChooser fx:id="listPakat" onMouseReleased="#handlePakka" prefHeight="72.0" prefWidth="248.0" rivit="Izzet Control (1 kpl)&#10;" />
                   <Label text="Muut pakat, joihin kuuluu:" />
-                  <ListChooser prefHeight="124.0" prefWidth="248.0" rivit="Kefnet (1 kpl)&#10;" />
+                  <ListChooser fx:id="listPakat" onMouseReleased="#handlePakka" prefHeight="124.0" prefWidth="248.0" rivit="Kefnet (1 kpl)&#10;" />
                </children>
                <BorderPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
