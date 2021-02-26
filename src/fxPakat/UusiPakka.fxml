@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pakat.MuokkausPakkaController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxPakat.UusiPakkaController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -45,16 +45,13 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-               <GridPane.margin>
-                  <Insets left="20.0" />
-               </GridPane.margin></Button>
-            <TextField fx:id="textNimi" text="Izzet Control" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Button mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField fx:id="textNimi" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <Label minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="93.0" text="Muokkaa pakkaa" GridPane.halignment="RIGHT">
+            <Label alignment="CENTER" contentDisplay="RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="165.0" text="Luo uusi pakka" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
@@ -65,12 +62,11 @@
                </padding>
             </Label>
             <ComboBoxChooser rivit="Modern&#10;Standard&#10;Pioner&#10;Commander&#10;Muu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField layoutX="189.0" layoutY="61.0" promptText="esim. kotelon tuntomerkit" text="Sininen kotelo" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField layoutX="189.0" layoutY="61.0" promptText="esim. kotelon tuntomerkit" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <Button mnemonicParsing="false" onAction="#handlePoista" text="Poista" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </center>

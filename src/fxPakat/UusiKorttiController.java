@@ -1,4 +1,4 @@
-package pakat;
+package fxPakat;
 
 import fi.jyu.mit.fxgui.ModalControllerInterface;
 import fi.jyu.mit.fxgui.Dialogs;

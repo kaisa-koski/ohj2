@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pakat.AktivoiController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxPakat.AktivoiController">
    <top>
       <Label fx:id="labelOhje" prefHeight="53.0" prefWidth="334.0" text="Olet aktivoimassa pakan: Kefnet. Siirrä pakkaan seuraavat kortit" BorderPane.alignment="CENTER" />
    </top>

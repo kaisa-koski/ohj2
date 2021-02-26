@@ -9,7 +9,7 @@
     <target name="create_run_jar">
         <jar destfile="${dir.jarfile}/pakat.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="pakat.PakkarekisteriMain"/>
+                <attribute name="Main-Class" value="fxPakat.PakkarekisteriMain"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="${dir.jarfile}/bin"/>
