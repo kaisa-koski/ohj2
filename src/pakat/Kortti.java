@@ -33,7 +33,8 @@ public class Kortti {
      * @param maara kuinka monta kpl samaa korttia omistuksessa
      */
     public Kortti(String nimi, int cmc, int maara) {
-        this.nimi = nimi;
+        String korjattu = Tarkistus.nimiTarkistus(nimi);
+        this.nimi = korjattu;
         this.cmc = cmc;
         this.maara = maara;
     }
@@ -66,7 +67,7 @@ public class Kortti {
      * @param out Tietovirta johon tulostetaan
      */
     public void tulosta(PrintStream out) {
-        out.println("Kortin ID: " + kid);
+        out.println("Kortin ID: " + String.format("%03d",kid));
         out.println("Kortin nimi: " + nimi);
         out.println("Cmc: " + cmc);
         out.println("Määrä: " + maara + " kpl");
@@ -109,6 +110,28 @@ public class Kortti {
     public int getID() {
         return this.kid;
     }
+    
+    /**
+     * @return palauttaa kortin nimen
+     */
+    public String getNimi() {
+        return this.nimi;
+    }
+
+    /**
+     * @return palauttaa kortin cmc-luvun
+     */
+    public int getCmc() {
+        return this.cmc;
+    }
+
+    /**
+     * @return palauttaa kortin määrän
+     */
+    public int getMaara() {
+        return this.maara;
+    }
+
 
 
     /**

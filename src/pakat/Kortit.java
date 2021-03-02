@@ -10,7 +10,7 @@ package pakat;
  */
 public class Kortit {
 
-    private static final int MAX_KORTTEJA = 5;
+    private static final int MAX_KORTTEJA = 10;
     private int lkm = 0;
     private Kortti[] alkiot;
 
@@ -43,6 +43,11 @@ public class Kortit {
      * kortit.anna(3) === jace1; #THROWS IndexOutOfBoundsException
      * kortit.lisaa(jace1); kortit.getLkm() === 4;
      * kortit.lisaa(jace1); kortit.getLkm() === 5;
+     * kortit.lisaa(jace1); kortit.getLkm() === 6;
+     * kortit.lisaa(jace1); kortit.getLkm() === 7;
+     * kortit.lisaa(jace1); kortit.getLkm() === 8;
+     * kortit.lisaa(jace1); kortit.getLkm() === 9;
+     * kortit.lisaa(jace1); kortit.getLkm() === 10;
      * kortit.lisaa(jace1); #THROWS SailoException
      * </pre> 
      */

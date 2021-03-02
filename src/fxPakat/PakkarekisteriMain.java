@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.fxml.FXMLLoader;
 
+import pakat.*;
+
 
 /**
  * Pakkarekisterin pääluokka. Avaa pääikkunan ohjelman käynnistyessä.
@@ -20,16 +22,22 @@ public class PakkarekisteriMain extends Application {
         try {
             FXMLLoader ldr = new FXMLLoader(getClass().getResource("PakkarekisteriGUIView.fxml"));
             final Pane root = ldr.load();
-            //final PakkarekisteriGUIController pakkarekisteriCtrl = (PakkarekisteriGUIController) ldr.getController();
+           // final PakkarekisteriGUIController pakkarekisteriCtrl = (PakkarekisteriGUIController) ldr.getController();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("pakkarekisteri.css").toExternalForm());
             primaryStage.setScene(scene);
             primaryStage.setTitle("Pakkarekisteri");
+            
+           // Pakkarekisteri pakkarekisteri = new Pakkarekisteri();
+           // pakkarekisteriCtrl.setRekisteri(pakkarekisteri);
+                    
             primaryStage.show();
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
+    
+
 
     /**
      * @param args Ei käytössä

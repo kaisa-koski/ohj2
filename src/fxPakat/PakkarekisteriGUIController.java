@@ -5,6 +5,10 @@ import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import pakat.Kortti;
+import pakat.Pakka;
+import pakat.Pakkarekisteri;
+import pakat.SailoException;
 
 /**
  * Käyttöliittymän pääikkunan toiminnasta vastaava luokka.
@@ -16,9 +20,9 @@ import javafx.scene.control.TextField;
 public class PakkarekisteriGUIController {
 
     @FXML
-    private ListChooser<String> listPakat;
+    private ListChooser<Pakka> chooserPakat;
     @FXML
-    private ListChooser<String> listKortit;
+    private ListChooser<Kortti> chooserKortit;
     @FXML
     private TextField textHaku;
 
@@ -69,7 +73,7 @@ public class PakkarekisteriGUIController {
     @FXML
     private void handleKortti() {
         Dialogs.showMessageDialog(
-                "Halusit katsoa kortin " + listKortit.getSelectedText()
+                "Halusit katsoa kortin " + chooserKortit.getSelectedText()
                         + " tietoja, mutta ei toimi vielä");
     }
 
@@ -107,7 +111,17 @@ public class PakkarekisteriGUIController {
 
     // =========================================================================================================================
 
-
+    private Pakkarekisteri pakkarekisteri;
+    
+    
+    /**
+     * Asetetaan pakkarekisteri käyttöön
+     * @param pakkarekisteri Pakkarekisteri jota käytetään
+     */
+    public void setRekisteri(Pakkarekisteri pakkarekisteri) {
+        this.pakkarekisteri = pakkarekisteri;
+    }
+    
     /**
      * Avaa pakan aktivointiin liittyvän ikkunan.
      */
@@ -168,10 +182,22 @@ public class PakkarekisteriGUIController {
      * Avaa uuden kortin luomiseen liittyvän ikkunan.
      */
     private void uusiKortti() {
+        
+       /** Kortti uusi = new Kortti();
+        uusi.rekisteroi();
+        uusi.jaceKortti(); //TODO: Korvaa myöhemmin
+        try {
+            pakkarekisteri.lisaa(uusi);
+        } catch (SailoException e) {
+            Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
+            return;
+        } */
+        
         var resurssi = PakkarekisteriGUIController.class
                 .getResource("UusiKortti.fxml");
         ModalController.showModal(resurssi, "Uusi kortti", null, "");
     }
+    
 
     /**
      * Avaa uuden pakan luomiseen ikkunan.
