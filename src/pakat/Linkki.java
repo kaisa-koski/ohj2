@@ -11,7 +11,7 @@ public class Linkki {
     private int pid;    //pakan id
     private int kid;    //kortin id
     private int kp;     //kappaleita pakassa
-    private int kk;     //kappaleita kuuluu linkkian
+    private int kk;     //kappaleita kuuluu pakkaan
     
     private static int seuraavaID = 1;
 
@@ -29,11 +29,22 @@ public class Linkki {
      * @param kp Kappaleita pakassa sillä hetkellä
      * @param kk Kappaleita kuuluu pakkaan
      */
-    public Linkki(int pid, int kid, int kp, int kk) {
+    public Linkki(int pid, int kid, int kp, int kk) { //TODO: Tarkistukset, onko parametrit pienempiä kuin nolla? Onko kp isompi kuin kk?
         this.pid = pid;
         this.kid = kid;
         this.kp = kp;
         this.kk = kk;
+        this.rekisteroi(); //TODO: Kysymys ohjaajalle: Kannattaako tämä tehdä tässä automaattisesti vai mieluummin erikseen?
+    }
+    
+    /**
+     * Uuden linkin luominen, kp oletuksena 0.
+     * @param pid Pakan id
+     * @param kid Kortin id
+     * @param kk Kappaleita kuuluu pakkaan
+     */
+    public Linkki(int pid, int kid, int kk) { //TODO: Tarkistukset, onko parametrit pienempiä kuin nolla? Onko kp isompi kuin kk?
+        this(pid, kid, 0, kk); //TODO Kysymys: Saako tässä olla 0?
     }
     
     /**
@@ -41,21 +52,70 @@ public class Linkki {
      * @return Linkille annettu ID-numero
      * @example
      * <pre name="test">
-     * Linkki linkki1 = new Linkki();
-     * linkki1.rekisteroi();
-     * Linkki linkki2 = new Linkki();
-     * linkki2.rekisteroi();
-     * int n1 = linkki.getID();
+     * Linkki linkki1 = new Linkki(1,2,4,4);
+     * Linkki linkki2 = new Linkki(2,3,0,1);
+     * int n1 = linkki1.getID();
      * int n2 = linkki2.getID();
      * n2 === n1+1;
      * </pre>
      */
     public int rekisteroi() {
-        this.pid = seuraavaID;
+        this.lid = seuraavaID;
         seuraavaID++;
+        return this.lid;
+    }
+   
+    
+    /**
+     * @return Palauttaa linkin ID:n
+     */
+    public int getID() {
+        return this.lid;
+    }
+    
+    /**
+     * @return Palauttaa kortin ID:n
+     */
+    public int getKID() {
+        return this.kid;
+    }
+    
+    /**
+     * @return Palauttaa kortin ID:n
+     */
+    
+    
+    public int getPID() {
         return this.pid;
     }
     
+    /**
+     * @return Palauttaa luvun, kuinka monta kyseistä korttia 
+     * pakassa sillä hetkellä sijaitsee.
+     */
+    public int getKp() {
+        return this.kp;
+    }
+    
+    
+    /**
+     * @return Palauttaa luvun, kuinka monta kyseistä korttia 
+     * pakkaan kaikenkaikkiaan kuuluu
+     */
+    public int getKk() {
+        return this.kk;
+    }
+    
+    /**
+     * Muuttaa pakassa sijaitsevien korttien määrää.
+     * @param uusiKp Uusi pakassa sijaitsevien korttien määrä
+     */
+    public void setKp(int uusiKp) {
+        if (uusiKp < 0 || this.kk < uusiKp) return;
+        this.kp = uusiKp;
+    }
+    
+
     /**
      * Testataan Linkki-luokkaa
      * @param args ei käytössä

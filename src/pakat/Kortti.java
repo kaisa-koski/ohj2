@@ -4,7 +4,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * (CRC-kortin tiedot tähän)
+ * Pitää yllä yksittäisen kortin tietoja.
  * @author Kaisa Koski
  * @version 24.2.2021
  *
@@ -59,6 +59,15 @@ public class Kortti {
         this.nimi = "Jace, the Mind Sculptor" + rand(1000, 9999);
         this.cmc = 4;
         this.maara = 1;
+    }
+    
+    /**
+     * Luo Snapcaster Mage -kortin (testaamista varten)
+     */
+    public void mageKortti() {
+        this.nimi = "Snapcaster Mage" + rand(1000, 9999);
+        this.cmc = 2;
+        this.maara = 2;
     }
 
 
@@ -132,6 +141,13 @@ public class Kortti {
         return this.maara;
     }
 
+    /**
+     * Merkkijono testaamisen avuksi
+     * @return Merkkijono pakan tiedoista
+     */
+    public String testiString() {
+        return "ID: " + String.format("%03d",kid) +"\n Kortin nimi: "+ this.nimi +"\n Cmc: "+ this.cmc+"\n Määrä: "+ this.maara +" kpl\n";
+    }
 
 
     /**

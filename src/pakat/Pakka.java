@@ -18,7 +18,7 @@ public class Pakka {
     private String nimi = "";
     private int tyyppi;
     // private boolean aktiivisuus; //TODO: Mieti toteutusta. Onko alussa false
-    // vai true? Voiko olla true ilman kortteja?
+    // vai true? Voiko olla true nollalla kortilla?
     private String muistiinpanot = "";
 
     private static int seuraavaID = 1;
@@ -54,7 +54,7 @@ public class Pakka {
      * pakka1.rekisteroi();
      * Pakka pakka2 = new Pakka();
      * pakka2.rekisteroi();
-     * int n1 = pakka.getID();
+     * int n1 = pakka1.getID();
      * int n2 = pakka2.getID();
      * n2 === n1+1;
      * </pre>
@@ -113,10 +113,18 @@ public class Pakka {
 
 
     /**
-     * @return palauttaa pakan nimen
+     * @return palauttaa pakan nimen    
      */
-    public String getMuistiinpanot() {
+    public String getMuistiinpanot() {  //TODO: Mieti, tarviiko näitä kaikkia gettereitä
         return this.muistiinpanot;
+    }
+    
+    /**
+     * Merkkijono testaamisen avuksi
+     * @return Merkkijono pakan tiedoista
+     */
+    public String testiString() {
+        return "ID: " + this.pid +"\n Pakan nimi: "+ this.nimi +"\n Pakan tyyppi: "+ this.tyyppi+"\n Muistiinpanot: "+muistiinpanot+"\n";
     }
 
 

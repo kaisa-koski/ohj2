@@ -4,6 +4,7 @@
 package pakat;
 
 /**
+ * Pitää yllä tietoa kaikista korteista.
  * @author Kaisa Koski
  * @version 24.2.2021
  *
@@ -53,9 +54,24 @@ public class Kortit {
      */
     public void lisaa(Kortti kortti) throws SailoException {
         if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+        kortti.rekisteroi();
         alkiot[lkm] = kortti;
         lkm++;
     }
+    
+    
+    /**
+     * Lisätään korttien tallennustilaa.
+     */
+    public void tilanLisaaminen() {
+       Kortti[] uusi = new Kortti[this.getLkm() + MAX_KORTTEJA];
+       for (int i = 0; i < uusi.length; i++) {
+        uusi[i] = alkiot[i];
+    }
+       this.alkiot = uusi;
+    } 
+    
+    
     
     
     /**
@@ -76,6 +92,32 @@ public class Kortit {
         return alkiot[i];
     }
     
+    
+    /**
+     * Palauttaa kortin nimen ID:n perusteella
+     * @param kid Kortin id
+     * @return Kortin nimi
+     */
+    public String annaNimi(int kid) {
+        for (Kortti kortti : alkiot) {
+            if (kortti.getID()==kid) return kortti.getNimi();
+        }
+        return "Ei löydy";
+    }
+    
+    /**
+     * Testaamisen avuksi korttien tiedot merkkijonona.
+     * @return Korttien tiedot merkkijonoina
+     */
+    public String testiString() {
+      StringBuilder sb = new StringBuilder();
+      for (Kortti kortti : alkiot) {
+          if (kortti == null) continue;
+           sb.append(kortti.testiString());
+        }
+      return sb.toString();
+    }
+    
 
     /**
      * Testataan Kortit-luokkaa.
@@ -87,8 +129,6 @@ public class Kortit {
 
         Kortti jace = new Kortti();
         Kortti jace2 = new Kortti();
-        jace.rekisteroi();
-        jace2.rekisteroi();
         jace.jaceKortti();
         jace2.jaceKortti();
 

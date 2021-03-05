@@ -35,7 +35,7 @@ public class Tyyppi {
         return this.nimi;
     }
     
-    
+    //TODO: metodi joka palauttaa tyypin nimen ID:n perusteella
     
     /**
      * Testataan tyyppi-luokkaa

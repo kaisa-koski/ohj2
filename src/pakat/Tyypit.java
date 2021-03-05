@@ -8,7 +8,6 @@ package pakat;
 public class Tyypit {
     
     private static final int MAX_TYYPIT = 5;
-    private int lkm;
     private Tyyppi[] alkiot;
    
     

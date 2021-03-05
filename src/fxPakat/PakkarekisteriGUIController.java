@@ -8,7 +8,6 @@ import javafx.scene.control.TextField;
 import pakat.Kortti;
 import pakat.Pakka;
 import pakat.Pakkarekisteri;
-import pakat.SailoException;
 
 /**
  * Käyttöliittymän pääikkunan toiminnasta vastaava luokka.
@@ -111,7 +110,7 @@ public class PakkarekisteriGUIController {
 
     // =========================================================================================================================
 
-    private Pakkarekisteri pakkarekisteri;
+   private Pakkarekisteri pakkarekisteri;
     
     
     /**
