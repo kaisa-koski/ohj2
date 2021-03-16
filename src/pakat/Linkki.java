@@ -34,7 +34,7 @@ public class Linkki {
         this.kid = kid;
         this.kp = kp;
         this.kk = kk;
-        this.rekisteroi(); //TODO: Kysymys ohjaajalle: Kannattaako tämä tehdä tässä automaattisesti vai mieluummin erikseen?
+        this.rekisteroi(); //TODO: Rekisteröinti ehkä erikseen?
     }
     
     /**
@@ -44,7 +44,7 @@ public class Linkki {
      * @param kk Kappaleita kuuluu pakkaan
      */
     public Linkki(int pid, int kid, int kk) { //TODO: Tarkistukset, onko parametrit pienempiä kuin nolla? Onko kp isompi kuin kk?
-        this(pid, kid, 0, kk); //TODO Kysymys: Saako tässä olla 0?
+        this(pid, kid, 0, kk);
     }
     
     /**

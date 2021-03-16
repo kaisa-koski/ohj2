@@ -2,7 +2,7 @@ package pakat;
 
 /**
  * @author Kaisa Koski
- * @version 2.3.2021
+ * @version 16.3.2021
  *
  */
 public class Pakat {
@@ -27,21 +27,16 @@ public class Pakat {
      */
     public void lisaaEiPakassa() {
         Pakka eiPakassa = new Pakka("Ei pakassa", 5, "Kortit, jotka eivät tällä hetkellä ole missään pakassa");
-        try {
-            this.lisaa(eiPakassa);
-        } catch (SailoException e) {
-            System.err.println(e.getMessage()); //TODO: Lisätäänkö samalla tavalla "Kaikki kortit"?
-        }
+        this.lisaa(eiPakassa);
     }
     
     
     /**
-     * Uuden pakan lisääminen
+     * Uuden pakan lisääminen, lisätään tilaa
+     * jos tietorakenne on täynnä.
      * @param pakka Lisättävä pakka
-     * @throws SailoException jos tietorakenne on täynnä
      * @example
      * <pre name="test">
-     * #THROWS SailoException
      * Pakat pakat = new Pakat();
      * Pakka izzet1 = new Pakka(), izzet2 = new Pakka();
      * pakat.getLkm() === 0+1;
@@ -55,14 +50,35 @@ public class Pakat {
      * pakat.anna(1+1) == izzet2 === true;
      * pakat.anna(3+1) === izzet1; #THROWS IndexOutOfBoundsException
      * pakat.lisaa(izzet1); pakat.getLkm() === 4+1;
-     * pakat.lisaa(izzet1);  #THROWS SailoException      
+     * pakat.lisaa(izzet1); pakat.getLkm() > 5 === true;     
      * </pre> 
      */
-    public void lisaa(Pakka pakka) throws SailoException {
-        if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+    public void lisaa(Pakka pakka) {
+        if (lkm >= alkiot.length) lisaaTilaa();
         pakka.rekisteroi();
         alkiot[lkm] = pakka;
         lkm++;
+    }
+    
+    /**
+     * Tilan lisääminen pakoille.
+     * @example
+     * <pre name="test">
+     * Pakat pakat = new Pakat();
+     * pakat.getLkm() === 1;
+     * pakat.getKoko() === 5;
+     * pakat.lisaa(new Pakka()); pakat.lisaa(new Pakka());
+     * pakat.lisaa(new Pakka()); pakat.lisaa(new Pakka());
+     * pakat.lisaa(new Pakka()); pakat.getLkm() === 6;
+     * pakat.getKoko() === 10;
+     * </pre>
+     */
+    public void lisaaTilaa() {
+        Pakka[] uusi = new Pakka[lkm + MAX_PAKKOJA];
+        for (int i = 0; i < lkm; i++) {
+         uusi[i] = alkiot[i];
+     }
+        this.alkiot = uusi;
     }
     
     /**
@@ -70,6 +86,14 @@ public class Pakat {
      */
     public int getLkm() {
         return lkm;
+    }
+    
+    /**
+     * Palauttaa alkiotaulukon pituuden (testaamista varten)
+     * @return Alkiotaulukon pituus
+     */
+    public int getKoko() {
+        return alkiot.length;
     }
 
     
@@ -108,12 +132,10 @@ public class Pakat {
         izzet.izzetPakka();
         izzet2.izzetPakka();
 
-        try {
+   
             pakat.lisaa(izzet);
             pakat.lisaa(izzet2);
-        } catch (SailoException e) {
-            System.err.println(e.getMessage());
-        }
+      
         
 
         System.out.println("========== Pakat - testi ========== ");
@@ -124,6 +146,7 @@ public class Pakat {
             System.out.println();
         }
     
+       
     }
 
 }

@@ -1,9 +1,16 @@
 package fxPakat;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import pakat.Kortti;
 import pakat.Pakka;
@@ -13,24 +20,39 @@ import pakat.Pakkarekisteri;
  * Käyttöliittymän pääikkunan toiminnasta vastaava luokka.
  *  
  * @author Kaisa Koski
- * @version 15.2.2021
+ * @version 16.3.2021
  *
  */
-public class PakkarekisteriGUIController {
+public class PakkarekisteriGUIController implements Initializable {
 
     @FXML
     private ListChooser<Pakka> chooserPakat;
     @FXML
     private ListChooser<Kortti> chooserKortit;
     @FXML
+    private Label labelPakanNimi;
+    @FXML
+    private Label labelPakanTyyppi;
+    @FXML
+    private Label labelPakanMp;
+    @FXML
     private TextField textHaku;
-
+    @FXML
+    private ListChooser<Pakka> kortinPakatTrue;
+    @FXML
+    private ListChooser<Pakka> kortinPakatFalse;
     @FXML
     private void handleAktivoi() {
         aktivoi();
     }
 
 
+    @Override
+    public void initialize(URL url, ResourceBundle bundle) {
+        alusta();
+    }
+    
+    
     @FXML
     private void handleLisaaPoistaKortti() {
         lisaaKortti();
@@ -64,8 +86,8 @@ public class PakkarekisteriGUIController {
 
     @FXML
     private void handlePakka() {
-        Dialogs.showMessageDialog(
-                "Halusit katsoa klikkaamasi pakan tietoja, mutta ei toimi vielä");
+        /*Dialogs.showMessageDialog(
+                "Halusit katsoa klikkaamasi pakan tietoja, mutta ei toimi vielä");*/
     }
 
 
@@ -112,13 +134,21 @@ public class PakkarekisteriGUIController {
 
    private Pakkarekisteri pakkarekisteri;
     
-    
     /**
      * Asetetaan pakkarekisteri käyttöön
      * @param pakkarekisteri Pakkarekisteri jota käytetään
      */
     public void setRekisteri(Pakkarekisteri pakkarekisteri) {
         this.pakkarekisteri = pakkarekisteri;
+    }
+    
+    /**
+     * Alustaa tarvittavat asiat, esimerkiksi lisää kuuntelijan
+     * pakkalistalle.
+     */
+    private void alusta(){
+        chooserPakat.clear();
+        chooserPakat.addSelectionListener(e -> naytaPakka());
     }
     
     /**
@@ -177,24 +207,17 @@ public class PakkarekisteriGUIController {
         ModalController.showModal(resurssi, "Muokkaa", null, "");
     }
 
+
     /**
      * Avaa uuden kortin luomiseen liittyvän ikkunan.
      */
     private void uusiKortti() {
-        
-       /** Kortti uusi = new Kortti();
-        uusi.rekisteroi();
-        uusi.jaceKortti(); //TODO: Korvaa myöhemmin
-        try {
-            pakkarekisteri.lisaa(uusi);
-        } catch (SailoException e) {
-            Dialogs.showMessageDialog("Ongelmia uuden luomisessa " + e.getMessage());
-            return;
-        } */
-        
-        var resurssi = PakkarekisteriGUIController.class
+        Kortti uusi = new Kortti().jaceKortti(); // TODO: Korvaa myöhemmin
+        pakkarekisteri.lisaa(uusi); //rekisteröi samalla
+
+       /** var resurssi = PakkarekisteriGUIController.class
                 .getResource("UusiKortti.fxml");
-        ModalController.showModal(resurssi, "Uusi kortti", null, "");
+        ModalController.showModal(resurssi, "Uusi kortti", null, "");*/
     }
     
 
@@ -202,9 +225,48 @@ public class PakkarekisteriGUIController {
      * Avaa uuden pakan luomiseen ikkunan.
      */
     private void uusiPakka() {
-        var resurssi = PakkarekisteriGUIController.class
+        Pakka uusi = new Pakka().izzetPakka(); //TODO: korvaa myöhemmin izzet-pakka dialogilla
+        pakkarekisteri.lisaa(uusi); //Lisäämisessä rekisteröi samalla.
+        haePakat(uusi.getID());
+        
+      /**  var resurssi = PakkarekisteriGUIController.class
                 .getResource("UusiPakka.fxml");
-        ModalController.showModal(resurssi, "UusiPakka", null, "");
+        ModalController.showModal(resurssi, "UusiPakka", null, "");*/
+    }
+    
+    /**
+     * Hakee pakkojen tiedot listaan
+     * @param pid Pakan id
+     */
+    private void haePakat(int pid) {
+        chooserPakat.clear();
+        int indeksi = 0;
+        for (int i = 0; i < pakkarekisteri.getPakatLkm(); i++) {
+            Pakka pakka = pakkarekisteri.anna(i);
+            if (pakka.getID() == pid) indeksi = i;
+            chooserPakat.add(pakka.getNimi(), pakka);
+        }
+        chooserPakat.setSelectedIndex(indeksi);
+    }
+    
+    /**
+     * Näyttää sen pakan tiedot, jonka nimeä on klikattu.
+     */
+    private void naytaPakka() {
+        Pakka p = chooserPakat.getSelectedObject();
+        labelPakanNimi.setText(p.getNimi());
+        labelPakanTyyppi.setText(pakkarekisteri.etsiTyyppi(p.getTyyppi()));
+        labelPakanMp.setText(p.getMuistiinpanot());
+        naytaPakanKortit(p);
+    }
+    
+    
+    private void naytaPakanKortit(Pakka pakka) {
+        chooserKortit.clear();
+        List<Kortti> kortit = new ArrayList<Kortti>(pakkarekisteri.pakanKortit(pakka.getID()));
+        for (Kortti k : kortit) {
+            chooserKortit.add(k.getNimi(), k);
+        }
     }
 
 }

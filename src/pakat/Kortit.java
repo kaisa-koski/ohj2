@@ -6,7 +6,7 @@ package pakat;
 /**
  * Pitää yllä tietoa kaikista korteista.
  * @author Kaisa Koski
- * @version 24.2.2021
+ * @version 16.3.2021
  *
  */
 public class Kortit {
@@ -24,12 +24,11 @@ public class Kortit {
 
 
     /**
-     * Uuden kortin lisääminen
+     * Uuden kortin lisääminen, lisätään tilaa
+     * jos se loppuu
      * @param kortti Lisättävä kortti
-     * @throws SailoException jos tietorakenne on täynnä
      * @example
      * <pre name="test">
-     * #THROWS SailoException
      * Kortit kortit = new Kortit();
      * Kortti jace1 = new Kortti(), jace2 = new Kortti();
      * kortit.getLkm() === 0;
@@ -49,11 +48,11 @@ public class Kortit {
      * kortit.lisaa(jace1); kortit.getLkm() === 8;
      * kortit.lisaa(jace1); kortit.getLkm() === 9;
      * kortit.lisaa(jace1); kortit.getLkm() === 10;
-     * kortit.lisaa(jace1); #THROWS SailoException
+     * kortit.lisaa(jace1); kortit.getLkm() === 11;
      * </pre> 
      */
-    public void lisaa(Kortti kortti) throws SailoException {
-        if (lkm >= alkiot.length) throw new SailoException("Liikaa alkioita");
+    public void lisaa(Kortti kortti) {
+        if (lkm >= alkiot.length) lisaaTilaa();
         kortti.rekisteroi();
         alkiot[lkm] = kortti;
         lkm++;
@@ -63,15 +62,13 @@ public class Kortit {
     /**
      * Lisätään korttien tallennustilaa.
      */
-    public void tilanLisaaminen() {
+    public void lisaaTilaa() {
        Kortti[] uusi = new Kortti[this.getLkm() + MAX_KORTTEJA];
-       for (int i = 0; i < uusi.length; i++) {
+       for (int i = 0; i < alkiot.length; i++) {
         uusi[i] = alkiot[i];
     }
        this.alkiot = uusi;
     } 
-    
-    
     
     
     /**
@@ -100,7 +97,7 @@ public class Kortit {
      */
     public String annaNimi(int kid) {
         for (Kortti kortti : alkiot) {
-            if (kortti.getID()==kid) return kortti.getNimi();
+            if (kortti.getID() == kid) return kortti.getNimi();
         }
         return "Ei löydy";
     }
@@ -132,12 +129,9 @@ public class Kortit {
         jace.jaceKortti();
         jace2.jaceKortti();
 
-        try {
             kortit.lisaa(jace);
             kortit.lisaa(jace2);
-        } catch (SailoException e) {
-            System.err.println(e.getMessage());
-        }
+
         
 
         System.out.println("========== Kortit - testi ========== ");

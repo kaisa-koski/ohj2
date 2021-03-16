@@ -1,5 +1,6 @@
 package pakat;
 
+
 /**
  * @author Kaisa Koski
  * @version 2.3.2021
@@ -35,15 +36,13 @@ public class Tyyppi {
         return this.nimi;
     }
     
-    //TODO: metodi joka palauttaa tyypin nimen ID:n perusteella
     
     /**
      * Testataan tyyppi-luokkaa
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-    // TODO Auto-generated method stub
-    
+    //
     }
 
 }

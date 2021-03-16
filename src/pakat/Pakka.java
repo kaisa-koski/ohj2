@@ -9,7 +9,7 @@ import java.io.PrintStream;
 /**
  * Pitää yllä yksittäisen pakan tiedot.
  * @author Kaisa Koski
- * @version 2.3.2021
+ * @version 16.3.2021
  *
  */
 public class Pakka {
@@ -17,8 +17,6 @@ public class Pakka {
     private int pid;
     private String nimi = "";
     private int tyyppi;
-    // private boolean aktiivisuus; //TODO: Mieti toteutusta. Onko alussa false
-    // vai true? Voiko olla true nollalla kortilla?
     private String muistiinpanot = "";
 
     private static int seuraavaID = 1;
@@ -38,10 +36,11 @@ public class Pakka {
      * @param muistiinpanot Pakan muistiinpanot
      */
     public Pakka(String nimi, int tyyppi, String muistiinpanot) {
-        String korjattu = Tarkistus.nimiTarkistus(nimi);
-        this.nimi = korjattu;
+        String korjattuNimi = Tarkistus.mjTarkistus(nimi);
+        String korjattuMp =Tarkistus.mjTarkistus(muistiinpanot);
+        this.nimi = korjattuNimi;
         this.tyyppi = tyyppi;
-        this.muistiinpanot = muistiinpanot;
+        this.muistiinpanot = korjattuMp;
     }
 
 
@@ -80,11 +79,13 @@ public class Pakka {
 
     /**
      * Luo Izzet Control-pakan (testaamista varten)
+     * @return testipakka
      */
-    public void izzetPakka() {
+    public Pakka izzetPakka() {
         this.nimi = "Izzet Control" + rand(1000, 9999);
         this.tyyppi = 1;
         this.muistiinpanot = "Sininen kotelo" + rand(1000, 9999);
+        return this;
     }
 
 
@@ -119,8 +120,26 @@ public class Pakka {
         return this.muistiinpanot;
     }
     
+    @Override
     /**
-     * Merkkijono testaamisen avuksi
+     * Merkkijono tiedostoon tallentamista varten
+     * 
+     * @example
+     * <pre name="test">
+     * Pakka pakka1 = new Pakka("Ekapakka", 2, "Eka");
+     * Pakka pakka2 = new Pakka("Tokapakka", 3, "Toka");
+     * pakka1.rekisteroi();
+     * pakka2.rekisteroi();
+     * pakka1.toString() === "1|Ekapakka|2|Eka";
+     * pakka2.toString() === "2|Tokapakka|3|Toka";
+     * </pre>
+     */
+    public String toString() {
+        return this.pid + "|" + this.nimi + "|" + this.tyyppi + "|" + this.muistiinpanot;
+    }
+    
+    /**
+     * Merkkijono testaamisen avuksi //TODO: Muokkaa tätä lopuksi, käyttäjä ei tarvitse ID:tä
      * @return Merkkijono pakan tiedoista
      */
     public String testiString() {
@@ -133,7 +152,7 @@ public class Pakka {
      * @param out Tietovirta johon tulostetaan
      */
     public void tulosta(PrintStream out) {
-        out.println("Pakan ID: " + this.getID());
+        out.println("Pakan ID: " + this.getID()); //TODO: tämä testailua varten, käyttäjä ei tarvitse ID:tä
         out.println("Pakan nimi: " + this.getNimi());
         out.println("Pakan tyyppi: " + this.getTyyppi());
         out.println("Muistiinpanot: " + this.getMuistiinpanot());

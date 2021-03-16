@@ -33,7 +33,7 @@ public class Kortti {
      * @param maara kuinka monta kpl samaa korttia omistuksessa
      */
     public Kortti(String nimi, int cmc, int maara) {
-        String korjattu = Tarkistus.nimiTarkistus(nimi);
+        String korjattu = Tarkistus.mjTarkistus(nimi);
         this.nimi = korjattu;
         this.cmc = cmc;
         this.maara = maara;
@@ -54,20 +54,24 @@ public class Kortti {
 
     /**
      * Luo Jace-kortin (testaamista varten)
+     * @return Testikortti
      */
-    public void jaceKortti() {
+    public Kortti jaceKortti() {
         this.nimi = "Jace, the Mind Sculptor" + rand(1000, 9999);
         this.cmc = 4;
         this.maara = 1;
+        return this;
     }
     
     /**
      * Luo Snapcaster Mage -kortin (testaamista varten)
+     * @return Testikortti
      */
-    public void mageKortti() {
+    public Kortti mageKortti() {
         this.nimi = "Snapcaster Mage" + rand(1000, 9999);
         this.cmc = 2;
         this.maara = 2;
+        return this;
     }
 
 

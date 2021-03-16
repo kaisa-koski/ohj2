@@ -14,21 +14,21 @@ public class Tarkistus {
      * tiedoston lukemista ja kirjoittamista. Poistaa myös mahdolliset
      * useammat välilyönnit sanojen välistä ja kaikki välilyönnit
      * alusta ja lopusta.
-     * @param nimi Syötteenä saatu nimi
+     * @param mj Syötteenä saatu nimi
      * @return nimi josta on poistettu mahdolliset |-merkit
      * @example
      * <pre name="test">
      * String huonoNimi = "Snapcaster | Mage";
-     * String parempiNimi = nimiTarkistus(huonoNimi);
+     * String parempiNimi = mjTarkistus(huonoNimi);
      * parempiNimi === "Snapcaster Mage";
      * String h2 = "Snapcaster    Mage ";
-     * String p2 = nimiTarkistus(h2);
+     * String p2 = mjTarkistus(h2);
      * p2 === "Snapcaster Mage";
      * </pre>
      */
-    public static String nimiTarkistus(String nimi) {
-        String korjattuNimi = nimi.replace("|", "").trim().replaceAll(" +", " ");
-        return korjattuNimi;
+    public static String mjTarkistus(String mj) {
+        String korjattuMj = mj.replace("|", "").trim().replaceAll(" +", " ");
+        return korjattuMj;
     }
     
     
@@ -39,7 +39,7 @@ public class Tarkistus {
     public static void main(String[] args) {
         String huonoNimi = "   Ville   | Vallaton   ";
         System.out.println("Esimerkki huonosta nimestä: " + huonoNimi);
-        String parempi = nimiTarkistus(huonoNimi);
+        String parempi = mjTarkistus(huonoNimi);
         System.out.println("Nimi korjattuna: " + parempi);
     }
 
