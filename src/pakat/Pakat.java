@@ -107,6 +107,8 @@ public class Pakat {
         return alkiot[i];
     }
     
+    //TODO: toString
+    
     /**
      * Testaamisen avuksi pakkojen tiedot merkkijonona.
      * @return Pakkojen tiedot merkkijonoina

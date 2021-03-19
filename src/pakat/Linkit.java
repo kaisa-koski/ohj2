@@ -321,6 +321,8 @@ public class Linkit {
         return true;
     }
 
+  //TODO: toString
+
 
     /**
      * Testataan Linkit-luokkaa

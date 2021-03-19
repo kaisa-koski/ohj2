@@ -1,12 +1,9 @@
-/**
- * 
- */
 package pakat;
 
 /**
  * Pitää yllä tietoa kaikista korteista.
  * @author Kaisa Koski
- * @version 16.3.2021
+ * @version 19.3.2021
  *
  */
 public class Kortit {
@@ -61,6 +58,21 @@ public class Kortit {
     
     /**
      * Lisätään korttien tallennustilaa.
+     * @example
+     * <pre name="test">
+     *  Kortit kortit = new Kortit();
+     *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
+     *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
+     *  kortit.lisaa(kortti1);
+     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
+     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
+     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
+     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
+     *  kortit.lisaa(kortti2); kortit.getLkm() === 10; //alkuperäinen maksimi
+     *  kortit.lisaa(kortti2); kortit.getLkm() === 11; //nyt tehty uusi taulukko
+     *  kortit.anna(0) === kortti1;
+     *  kortit.anna(1) === kortti2; //kopioitu taulukko sisältää myös aiemmin lisätyt
+     * </pre>
      */
     public void lisaaTilaa() {
        Kortti[] uusi = new Kortti[this.getLkm() + MAX_KORTTEJA];
@@ -83,6 +95,14 @@ public class Kortit {
      * Palauttaa korttien joukosta pyydetyn kortin.
      * @param i kortin indeksi
      * @return kortti pyydetystä indeksistä
+     * @example
+     * <pre name="test">
+     *  Kortit kortit = new Kortit();
+     *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
+     *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
+     *  kortit.anna(0) === kortti1;
+     *  kortit.anna(1) === kortti2
+     * </pre>
      */
     public Kortti anna(int i) {
         if (i < 0 || lkm <= i) throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
@@ -94,13 +114,45 @@ public class Kortit {
      * Palauttaa kortin nimen ID:n perusteella
      * @param kid Kortin id
      * @return Kortin nimi
+     * @example
+     * <pre name="test">
+     *  Kortit kortit = new Kortit();
+     *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
+     *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
+     *  kortit.lisaa(kortti1); kortit.lisaa(kortti2);
+     *  kortit.annaNimi(1) === "Eka kortti";
+     *  kortit.annaNimi(2) === "Muut kortit";
+     *  </pre>
      */
     public String annaNimi(int kid) {
-        for (Kortti kortti : alkiot) {
-            if (kortti.getID() == kid) return kortti.getNimi();
+        for (int i = 0; i < alkiot.length; i++) {
+            Kortti k = alkiot[i];
+            if (k == null) continue;
+            if (k.getID() == kid) return k.getNimi();
         }
-        return "Ei löydy";
+        return "Ei löydy"; //TODO: selvitä, miksei testi toimi vaikka mainissa toimii
     }
+    
+    
+    @Override
+    /**
+     * @example
+     * <pre name="test">
+     *  Kortit kortit = new Kortit();
+     *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
+     *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
+     *  kortit.lisaa(kortti1); kortit.lisaa(kortti2);
+     *  kortit.toString() === "kID|kortin nimi|kpl|cmc\n1|Eka kortti|1|1\n2|Muut kortit|2|2";
+     *  </pre>
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder("kID|kortin nimi|kpl|cmc");
+        for (int i = 0; i < lkm; i++) {
+            sb.append("\n"+alkiot[i]);
+        }
+        return sb.toString();
+    }
+    
     
     /**
      * Testaamisen avuksi korttien tiedot merkkijonona.
@@ -121,18 +173,31 @@ public class Kortit {
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-
-        Kortit kortit = new Kortit();
-
-        Kortti jace = new Kortti();
-        Kortti jace2 = new Kortti();
-        jace.jaceKortti();
-        jace2.jaceKortti();
-
-            kortit.lisaa(jace);
-            kortit.lisaa(jace2);
-
         
+        Kortit kortit = new Kortit();
+        Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
+        Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
+        System.out.println(kortti1.getID());
+        System.out.println(kortti2.getID());
+        kortit.lisaa(kortti1);
+        kortit.lisaa(kortti2);
+        System.out.println(kortti1.getID());
+        System.out.println(kortti2.getID());
+        System.out.println(kortit.annaNimi(1));
+        System.out.println(kortit.annaNimi(2));
+
+           /* Kortit kortit = new Kortit();
+           int j = 0; 
+           while(j <= 10) {
+               kortit.lisaa(new Kortti().jaceKortti());
+               j++;
+           }
+           while(j <= 20) {
+               kortit.lisaa(new Kortti().mageKortti());
+               j++;
+           }
+        System.out.println(kortit);   
+        System.out.println();
 
         System.out.println("========== Kortit - testi ========== ");
         for (int i = 0; i < kortit.getLkm(); i++) {
@@ -140,7 +205,7 @@ public class Kortit {
             System.out.println("Kortti indeksillä " + i);
             kortti.tulosta(System.out);
             System.out.println();
-        }
+        }*/
 
     }
 

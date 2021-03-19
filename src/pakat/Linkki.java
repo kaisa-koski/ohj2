@@ -115,6 +115,7 @@ public class Linkki {
         this.kp = uusiKp;
     }
     
+    //TODO: toString
 
     /**
      * Testataan Linkki-luokkaa

@@ -144,6 +144,11 @@ public class Kortti {
     public int getMaara() {
         return this.maara;
     }
+    
+    @Override
+    public String toString() {
+        return String.valueOf(kid)+"|"+nimi+"|"+String.valueOf(maara)+"|"+String.valueOf(cmc);
+    }
 
     /**
      * Merkkijono testaamisen avuksi
@@ -165,11 +170,12 @@ public class Kortti {
         jace.rekisteroi();
         mage.rekisteroi();
         jace.jaceKortti();;
-        mage.jaceKortti();
+        mage.mageKortti();
 
         jace.tulosta(System.out);
         System.out.println();
         mage.tulosta(System.out);
-
+        System.out.println(jace);
+        System.out.println(mage);
     }
 }
