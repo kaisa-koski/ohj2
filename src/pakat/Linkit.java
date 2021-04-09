@@ -1,28 +1,91 @@
 package pakat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * @author Kaisa Koski
- * @version 4.3.2021
+ * @version 9.4.2021
  * Sisältää id-tiedot pakkojen sisältämistä korteista ja antaat tämän tiedon pyydettäessä.
  * Pitää yllä tietoa korttien sijainneista ja pyynnöstä välittää sitä muille.
  * Huolehtii kortin lisäämisestä ja poistamisesta pakkaan (tallentaa sen id-numerotiedoilla).
  * Huolehtii linkit.dat tiedoston lukemisesta ja uudelleenkirjoittamisesta.
  */
-public class Linkit {
+public class Linkit implements Iterable<Linkki> {
 
-    // private String tiedosto = "";
+    private final Collection<Linkki> alkiot = new ArrayList<Linkki>();
+    private String tiedosto = "";
+    private boolean muutettu = false;
 
-    private final List<Linkki> alkiot = new ArrayList<Linkki>(); //TODO: Collection?
-    private final static int EI_PAKASSA = 1; 
+    private final static int EI_PAKASSA = 1;
 
     /**
-     * Linkkien alustaminen //TODO: Tiedoston nimellä?
+     * Linkkien alustaminen 
      */
     public Linkit() {
         //
+    }
+    
+    /**
+     * Linkkien alustaminen 
+     * @param tiedosto Tiedoston nimi
+     */
+    public Linkit(String tiedosto) {
+        this.tiedosto = tiedosto;
+    }
+
+
+    @Override
+    public Iterator<Linkki> iterator() {
+        return alkiot.iterator();
+    }
+
+
+    /**
+     * Ladataan tiedot tiedostosta.
+     */
+    public void lataa() {
+        try (Scanner fi = new Scanner(new FileInputStream(new File(tiedosto)))) {
+            while ( fi.hasNext() ) {
+                try {
+                    String s = fi.nextLine();
+                    //Linkki linkki = new Linkki(); //TODO: Mieti vielä tätä toteutusta
+                    //linkki.parse(s);
+                    String[] palat = s.split("\\|");
+                    int pid = Integer.parseInt(palat[1]);
+                    int kid = Integer.parseInt(palat[2]);
+                    int kp = Integer.parseInt(palat[3]);
+                    int kk = Integer.parseInt(palat[4]);
+                    lisaa(new Linkki(pid, kid, kp, kk)); //TODO: Kysymys ohjaajalle: Onko tämä huonompi tapa kuin malli-ht:n parse ja olion tietojen muokkaaminen? Nyt kuitenkin id päivitttyy itse
+                } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                    continue;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            System.err.println("Tiedosto ei aukea! " + ex.getMessage());
+            return;
+        }
+    }
+
+
+    /**
+     * Tallennetaan tiedot tiedostoon, jos on tullut muutoksia.
+     */
+    public void tallenna() {
+        if (!muutettu) return;
+        try (PrintStream fo = new PrintStream(new FileOutputStream(tiedosto, false))) {
+                fo.print(toString());
+        } catch (FileNotFoundException ex) {
+            System.err.println("Tiedosto ei aukea: " + ex.getMessage());
+        }
     }
 
 
@@ -59,7 +122,9 @@ public class Linkit {
                                               // TODO: Käyttäjän valinta
                                               // siirtyykö ei pakasta?
         }
+        linkki.rekisteroi();
         alkiot.add(linkki);
+        muutettu = true;
     }
 
 
@@ -70,7 +135,9 @@ public class Linkit {
      */
     public void lisaaEiPakassa(int kid, int lkm) {
         Linkki linkki = new Linkki(EI_PAKASSA, kid, lkm, lkm);
+        linkki.rekisteroi();
         alkiot.add(linkki);
+        muutettu = true;
     }
 
 
@@ -97,9 +164,7 @@ public class Linkit {
      * </pre>
      */
     public void poista(int pid, int kid) {
-        int i = 0;
-        while (i < this.alkiot.size()) {
-            Linkki linkki = this.alkiot.get(i);
+        for (Linkki linkki : alkiot) {
             if (linkki.getPID() == pid && linkki.getKID() == kid) {
                 int kp = linkki.getKp();
                 if (0 < kp && pid != EI_PAKASSA) {
@@ -107,10 +172,10 @@ public class Linkit {
                     this.lisaa(uusi); // Pakassa sijainneet kortit siirretään
                                       // "Ei pakassa"-pakkaan
                 } // TODO: Tulisiko käyttäjälle tästä jokin ilmoitus?
-                this.alkiot.remove(i);
+                this.alkiot.remove(linkki);
+                muutettu = true;
                 return;
             }
-            i++;
         }
     }
 
@@ -256,7 +321,7 @@ public class Linkit {
 
 
     /**
-     * Palauttaa parametrina annetun pakan korttien id:t listana.
+     * Palauttaa parametrina annetun kortin pakkojen id:t listana.
      * @param kid Kortti jonka pakkojen id:t halutaan
      * @param sijainti Halutaanko ne pakat joissa ainakin yksi kpl kyseistä korttia
      * sijaitsee vai ne missä ei sijaitse, eli jos true, palauttaa pakat joissa
@@ -286,8 +351,10 @@ public class Linkit {
         for (Linkki linkki : alkiot) {
             int linkinKid = linkki.getKID();
             if (linkinKid == kid) {
-                if (sijainti == true && 0 < linkki.getKp()) pidlista.add(linkki.getPID());
-                if (sijainti == false && linkki.getKp() == 0) pidlista.add(linkki.getPID());
+                if (sijainti == true && 0 < linkki.getKp())
+                    pidlista.add(linkki.getPID());
+                if (sijainti == false && linkki.getKp() == 0)
+                    pidlista.add(linkki.getPID());
             }
         }
         return pidlista;
@@ -321,7 +388,24 @@ public class Linkit {
         return true;
     }
 
-  //TODO: toString
+    @Override
+    /**
+     * @example
+     * <pre name="test">
+     *  Linkit linkit = new Linkit();
+     *  Linkki linkki1 = new Linkki(1, 2, 2, 4);
+     *  Linkki linkki2 = new Linkki(1, 3, 2, 2);
+     *  linkit.lisaa(linkki1); linkit.lisaa(linkki2);
+     *  linkit.toString() === "lid|pid|kid| kpl nyt pakassa | kpl pakkaan kuuluu\n" + linkki1.getID() + "|1|2|2|4\n" + linkki2.getID() + "|1|3|2|2";
+     *  </pre>
+     */
+    public String toString() {
+        StringBuilder sb = new StringBuilder("lid|pid|kid| kpl nyt pakassa | kpl pakkaan kuuluu");
+        for (Linkki l : alkiot) {
+            sb.append("\r\n" + l.toString());
+        }
+        return sb.toString();
+    }
 
 
     /**

@@ -38,12 +38,19 @@ public class PakkarekisteriGUIController implements Initializable {
     @FXML
     private TextField textHaku;
     @FXML
-    private ListChooser<Pakka> kortinPakatTrue;
+    private Label labelKortinNimi;
     @FXML
-    private ListChooser<Pakka> kortinPakatFalse;
+    private Label labelKortinCmc;
+    @FXML
+    private Label labelKortinKpl;
+    @FXML
+    private ListChooser<Pakka> chooserKortinPakatTrue;
+    @FXML
+    private ListChooser<Pakka> chooserKortinPakatFalse;
     @FXML
     private void handleAktivoi() {
-        aktivoi();
+        //aktivoi();
+        tallenna(); //Väliaikainen tallennus!
     }
 
 
@@ -93,9 +100,9 @@ public class PakkarekisteriGUIController implements Initializable {
 
     @FXML
     private void handleKortti() {
-        Dialogs.showMessageDialog(
+      /*  Dialogs.showMessageDialog(
                 "Halusit katsoa kortin " + chooserKortit.getSelectedText()
-                        + " tietoja, mutta ei toimi vielä");
+                        + " tietoja, mutta ei toimi vielä");*/
     }
 
 
@@ -148,12 +155,23 @@ public class PakkarekisteriGUIController implements Initializable {
      */
     private void alusta(){
         chooserPakat.clear();
+        chooserKortit.clear();
+        chooserKortinPakatFalse.clear();
         chooserPakat.addSelectionListener(e -> naytaPakka());
+        chooserKortit.addSelectionListener(e -> naytaKortti());
+    }
+    
+
+
+
+    private void tallenna() {
+        pakkarekisteri.tallenna();
     }
     
     /**
-     * Avaa pakan aktivointiin liittyvän ikkunan.
+     * Avaa pakan aktivointiin liittyvän ikkunan. //TODO: Nyt väliaikaisesti poissa käytöstä
      */
+    @SuppressWarnings("unused")
     private void aktivoi() {
         var resurssi = PakkarekisteriGUIController.class
                 .getResource("Aktivoi.fxml");
@@ -260,13 +278,44 @@ public class PakkarekisteriGUIController implements Initializable {
         naytaPakanKortit(p);
     }
     
-    
+   /**
+    * Näyttää klikattuun pakkaan kuuluvat kortit. 
+    * @param pakka Pakka jonka kortteja listataan
+    */
     private void naytaPakanKortit(Pakka pakka) {
         chooserKortit.clear();
         List<Kortti> kortit = new ArrayList<Kortti>(pakkarekisteri.pakanKortit(pakka.getID()));
         for (Kortti k : kortit) {
-            chooserKortit.add(k.getNimi(), k);
+            chooserKortit.add(k.getNimi(), k); //TODO: Näyttämään, kuinka monta kpl pakassa yhteensä
+        }
+    }
+    
+    /**
+     * Näyttää sen kortin tiedot, jonka nimeä on klikattu.
+     */
+    private void naytaKortti() {
+        Kortti k = chooserKortit.getSelectedObject();
+        labelKortinNimi.setText(k.getNimi());
+        labelKortinCmc.setText("Cmc: " + k.getCmc());
+        labelKortinKpl.setText("Omistuksessa: " + k.getMaara() + " kpl");
+        naytaKortinPakat(k);
+    }
+    
+    /**
+     * Näyttää pakat, joihin kortti kuuluu
+     * @param k Kortti
+     */
+    private void naytaKortinPakat(Kortti k) {
+        chooserKortinPakatTrue.clear();
+        chooserKortinPakatFalse.clear();
+        List<Pakka> pakatTrue = new ArrayList<Pakka>(pakkarekisteri.kortinPakat(k.getID(), true));
+        List<Pakka> pakatFalse = new ArrayList<Pakka>(pakkarekisteri.kortinPakat(k.getID(), false));
+            for (Pakka p : pakatTrue) {
+                chooserKortinPakatTrue.add(p.getNimi(), p); //TODO: Näyttämään, montako sijaitsee yms
+            }
+            for (Pakka p : pakatFalse) {
+                chooserKortinPakatFalse.add(p.getNimi(), p);
+            }
         }
     }
 
-}

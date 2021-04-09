@@ -32,11 +32,11 @@ public class Kortti {
      * @param cmc kortin converted mana cost
      * @param maara kuinka monta kpl samaa korttia omistuksessa
      */
-    public Kortti(String nimi, int cmc, int maara) {
+    public Kortti(String nimi, int maara, int cmc) {
         String korjattu = Tarkistus.mjTarkistus(nimi);
         this.nimi = korjattu;
-        this.cmc = cmc;
         this.maara = maara;
+        this.cmc = cmc;
     }
 
 
@@ -62,7 +62,8 @@ public class Kortti {
         this.maara = 1;
         return this;
     }
-    
+
+
     /**
      * Luo Snapcaster Mage -kortin (testaamista varten)
      * @return Testikortti
@@ -80,12 +81,13 @@ public class Kortti {
      * @param out Tietovirta johon tulostetaan
      */
     public void tulosta(PrintStream out) {
-        out.println("Kortin ID: " + String.format("%03d",kid));
+        out.println("Kortin ID: " + String.format("%03d", kid));
         out.println("Kortin nimi: " + nimi);
         out.println("Cmc: " + cmc);
         out.println("Määrä: " + maara + " kpl");
     }
-    
+
+
     /**
      * Tulostetaan kortin tiedot
     * @param os Tietovirta johon tulostetaan
@@ -93,7 +95,6 @@ public class Kortti {
     public void tulosta(OutputStream os) {
         tulosta(new PrintStream(os));
     }
-
 
 
     /**
@@ -123,13 +124,15 @@ public class Kortti {
     public int getID() {
         return this.kid;
     }
-    
+
+
     /**
      * @return palauttaa kortin nimen
      */
     public String getNimi() {
         return this.nimi;
     }
+
 
     /**
      * @return palauttaa kortin cmc-luvun
@@ -138,6 +141,7 @@ public class Kortti {
         return this.cmc;
     }
 
+
     /**
      * @return palauttaa kortin määrän
      */
@@ -145,17 +149,22 @@ public class Kortti {
         return this.maara;
     }
     
+
+
     @Override
     public String toString() {
-        return String.valueOf(kid)+"|"+nimi+"|"+String.valueOf(maara)+"|"+String.valueOf(cmc);
+        return kid + "|" + nimi + "|" + maara + "|" + cmc;
     }
+
 
     /**
      * Merkkijono testaamisen avuksi
      * @return Merkkijono pakan tiedoista
      */
     public String testiString() {
-        return "ID: " + String.format("%03d",kid) +"\n Kortin nimi: "+ this.nimi +"\n Cmc: "+ this.cmc+"\n Määrä: "+ this.maara +" kpl\n";
+        return "ID: " + String.format("%03d", kid) + "\n Kortin nimi: "
+                + this.nimi + "\n Cmc: " + this.cmc + "\n Määrä: " + this.maara
+                + " kpl\n";
     }
 
 
@@ -169,7 +178,8 @@ public class Kortti {
 
         jace.rekisteroi();
         mage.rekisteroi();
-        jace.jaceKortti();;
+        jace.jaceKortti();
+        
         mage.mageKortti();
 
         jace.tulosta(System.out);

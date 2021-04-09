@@ -22,10 +22,30 @@ public class Pakkarekisteri {
      * Pakkarekisterin luominen
      */
     public Pakkarekisteri() {
-        this.linkit = new Linkit();
+        this.linkit = new Linkit("linkit.dat");
         this.tyypit = new Tyypit();
-        this.pakat = new Pakat();
-        this.kortit = new Kortit();
+        this.pakat = new Pakat("pakat.dat");
+        this.kortit = new Kortit("kortit.dat");
+        this.lataaTiedot(); //TODO: Mieti, miten kannattaa tehdä (huomioi ei-pakassa luominen)
+    }
+    
+    /**
+     * Ladataan tiedot tallennustiedostosta.
+     */
+    private void lataaTiedot() {
+        linkit.lataa();
+        pakat.lataa();
+        kortit.lataa();
+    }
+    
+    
+    /**
+     * Tallennetaan tiedot tiedostoihin.
+     */
+    public void tallenna() {
+        linkit.tallenna();
+        pakat.tallenna();
+        kortit.tallenna();
     }
     
     /**
@@ -95,11 +115,37 @@ public class Pakkarekisteri {
     public List<Kortti> pakanKortit(int pid){
         List<Kortti> pakanKortit = new ArrayList<Kortti>();
         List<Integer> kidLista = linkit.pakanKortit(pid);
-        for(int i = 0; i < kortit.getLkm(); i++) {
-            Kortti k = kortit.anna(i);
-            if(kidLista.contains(k.getID())) pakanKortit.add(k);
+        for (Integer i : kidLista) {
+            for(Kortti k : kortit) {
+                if(i.equals(k.getID())) {
+                    pakanKortit.add(k);
+                    break;
+                }
+            }
         }
         return pakanKortit;
+    }
+    
+    /**
+     * Palauttaa pakkalistan, joka sisältää pyydetyn kortin
+     * pakat kortit.
+     * @param kid Kortti jonka pakkalista palautetaan
+     * @param sijainti Annetaanko pakat, joissa sijaistsee vai ei
+     * @return Pakkalista
+     */
+    public List<Pakka> kortinPakat(int kid, boolean sijainti){
+        List<Pakka> kortinPakat = new ArrayList<Pakka>();
+        List<Integer> pidLista = linkit.kortinPakat(kid, sijainti); //TODO: Jos aikaa, voi tehdä iteraattorin
+        for (Integer i : pidLista) {
+            for(int j = 0; j < pakat.getLkm(); j++) {
+                Pakka p = pakat.anna(j);
+                if(i.equals(p.getID())) {
+                    kortinPakat.add(p);
+                    break;
+                }
+            }
+        }
+        return kortinPakat;
     }
     
     
@@ -121,6 +167,10 @@ public class Pakkarekisteri {
         Pakkarekisteri rekisteri = new Pakkarekisteri();
         Pakka p1 = new Pakka().izzetPakka();
         rekisteri.lisaa(p1);
+        System.out.println(rekisteri.linkit);
+        rekisteri.tallenna();
+        rekisteri.linkit.lataa();
+        System.out.println(rekisteri.linkit);
     }
     
 

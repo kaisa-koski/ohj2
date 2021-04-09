@@ -135,11 +135,11 @@ public class Pakka {
      * </pre>
      */
     public String toString() {
-        return this.pid + "|" + this.nimi + "|" + this.tyyppi + "|" + this.muistiinpanot;
+        return pid + "|" + nimi + "|" + tyyppi + "|" + muistiinpanot;
     }
     
     /**
-     * Merkkijono testaamisen avuksi //TODO: Muokkaa tätä lopuksi, käyttäjä ei tarvitse ID:tä
+     * Merkkijono testaamisen avuksi 
      * @return Merkkijono pakan tiedoista
      */
     public String testiString() {

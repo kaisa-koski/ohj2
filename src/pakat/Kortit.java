@@ -1,28 +1,87 @@
 package pakat;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Scanner;
+
 /**
  * Pitää yllä tietoa kaikista korteista.
  * @author Kaisa Koski
- * @version 19.3.2021
+ * @version 6.4.2021
  *
  */
-public class Kortit {
+public class Kortit implements Iterable<Kortti> {
 
-    private static final int MAX_KORTTEJA = 10;
-    private int lkm = 0;
-    private Kortti[] alkiot;
+    private final Collection<Kortti> alkiot = new ArrayList<Kortti>(); // Kysymys ohjaajalle: Miten final vaikuttaa? Taisi olla ettei pysty enää laittaa viittaamaan muualle, mutta sisältöä voi muuttaa?
+    private boolean muutettu = false;
+    private String tiedosto = "";
 
     /**
-     * Luodaan alustava taulukko
+     * Kortit-alustaminen
      */
     public Kortit() {
-        alkiot = new Kortti[MAX_KORTTEJA];
+        // 
+    }
+    
+    /**
+     * Luodaan alustava taulukko
+     * @param tiedosto Tallennustiedoston nimi
+     */
+    public Kortit(String tiedosto) {
+        this.tiedosto = tiedosto;
     }
 
 
     /**
-     * Uuden kortin lisääminen, lisätään tilaa
-     * jos se loppuu
+     * Ladataan tiedot tiedostosta.
+     */
+    public void lataa() {
+        try (Scanner fi = new Scanner(new FileInputStream(new File(tiedosto)))) {
+            while ( fi.hasNext() ) {
+                try {
+                    String s = fi.nextLine();
+                    String[] palat = s.split("\\|");
+                    String nimi = palat[1];
+                    int kpl = Integer.parseInt(palat[2]);
+                    int cmc = Integer.parseInt(palat[3]);
+                    lisaa(new Kortti(nimi, kpl, cmc));
+                } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                    continue;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            System.err.println("Tiedosto ei aukea! " + ex.getMessage());
+            return;
+        }
+    }
+
+
+    /**
+     * Tallennetaan tiedot tiedostoon, jos on tullut muutoksia.
+     */
+    public void tallenna() {
+        if (!muutettu) return;
+        try (PrintStream fo = new PrintStream(new FileOutputStream(tiedosto, false))) {
+                fo.print(toString());
+        } catch (FileNotFoundException ex) {
+            System.err.println("Tiedosto ei aukea: " + ex.getMessage());
+        }
+    }
+
+
+    @Override
+    public Iterator<Kortti> iterator() {
+      return alkiot.iterator();
+    }
+    
+    /**
+     * Uuden kortin lisääminen
      * @param kortti Lisättävä kortti
      * @example
      * <pre name="test">
@@ -31,85 +90,59 @@ public class Kortit {
      * kortit.getLkm() === 0;
      * kortit.lisaa(jace1); kortit.getLkm() === 1;
      * kortit.lisaa(jace2); kortit.getLkm() === 2;
-     * kortit.lisaa(jace1); kortit.getLkm() === 3;
-     * kortit.anna(0) === jace1;
-     * kortit.anna(1) === jace2;
-     * kortit.anna(2) === jace1;
-     * kortit.anna(1) == jace1 === false;
-     * kortit.anna(1) == jace2 === true;
-     * kortit.anna(3) === jace1; #THROWS IndexOutOfBoundsException
-     * kortit.lisaa(jace1); kortit.getLkm() === 4;
-     * kortit.lisaa(jace1); kortit.getLkm() === 5;
-     * kortit.lisaa(jace1); kortit.getLkm() === 6;
-     * kortit.lisaa(jace1); kortit.getLkm() === 7;
-     * kortit.lisaa(jace1); kortit.getLkm() === 8;
-     * kortit.lisaa(jace1); kortit.getLkm() === 9;
-     * kortit.lisaa(jace1); kortit.getLkm() === 10;
-     * kortit.lisaa(jace1); kortit.getLkm() === 11;
+     * kortit.anna(jace1.getID()) === jace1;
+     * kortit.anna(jace2.getID()) === jace2;
      * </pre> 
      */
     public void lisaa(Kortti kortti) {
-        if (lkm >= alkiot.length) lisaaTilaa();
         kortti.rekisteroi();
-        alkiot[lkm] = kortti;
-        lkm++;
+        alkiot.add(kortti);
+        muutettu = true;
     }
-    
-    
+
+
     /**
-     * Lisätään korttien tallennustilaa.
-     * @example
-     * <pre name="test">
-     *  Kortit kortit = new Kortit();
-     *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
-     *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
-     *  kortit.lisaa(kortti1);
-     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
-     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
-     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
-     *  kortit.lisaa(kortti2); kortit.lisaa(kortti2);
-     *  kortit.lisaa(kortti2); kortit.getLkm() === 10; //alkuperäinen maksimi
-     *  kortit.lisaa(kortti2); kortit.getLkm() === 11; //nyt tehty uusi taulukko
-     *  kortit.anna(0) === kortti1;
-     *  kortit.anna(1) === kortti2; //kopioitu taulukko sisältää myös aiemmin lisätyt
-     * </pre>
+     * Poistaa kortin korttien joukosta
+     * @param kortti Poistettava kortti
      */
-    public void lisaaTilaa() {
-       Kortti[] uusi = new Kortti[this.getLkm() + MAX_KORTTEJA];
-       for (int i = 0; i < alkiot.length; i++) {
-        uusi[i] = alkiot[i];
+    public void poista(Kortti kortti) {
+        alkiot.remove(kortti);
+        muutettu = true;
     }
-       this.alkiot = uusi;
-    } 
-    
-    
+
+
     /**
      * @return korttien lukumäärän
      */
     public int getLkm() {
-        return lkm;
+        return alkiot.size();
     }
 
-    
+
+  
     /**
      * Palauttaa korttien joukosta pyydetyn kortin.
-     * @param i kortin indeksi
+     * @param kid Kortin ID
      * @return kortti pyydetystä indeksistä
      * @example
      * <pre name="test">
      *  Kortit kortit = new Kortit();
      *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
      *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
-     *  kortit.anna(0) === kortti1;
-     *  kortit.anna(1) === kortti2
+     *  kortit.lisaa(kortti1); kortit.lisaa(kortti2);
+     *  kortit.anna(kortti1.getID()) === kortti1;
+     *  kortit.anna(kortti2.getID()) === kortti2;
      * </pre>
      */
-    public Kortti anna(int i) {
-        if (i < 0 || lkm <= i) throw new IndexOutOfBoundsException("Laiton indeksi: " + i);
-        return alkiot[i];
+    public Kortti anna(int kid) {
+        for(Kortti k : alkiot) {
+            if (k.getID() == kid) return k;
+        }
+      throw new IndexOutOfBoundsException("Korttia ei löydy");
     }
     
-    
+
+
     /**
      * Palauttaa kortin nimen ID:n perusteella
      * @param kid Kortin id
@@ -120,20 +153,19 @@ public class Kortit {
      *  Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
      *  Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
      *  kortit.lisaa(kortti1); kortit.lisaa(kortti2);
-     *  kortit.annaNimi(1) === "Eka kortti";
-     *  kortit.annaNimi(2) === "Muut kortit";
+     *  kortit.annaNimi(kortti1.getID()) === "Eka kortti";
+     *  kortit.annaNimi(kortti2.getID()) === "Muut kortit";
      *  </pre>
      */
     public String annaNimi(int kid) {
-        for (int i = 0; i < alkiot.length; i++) {
-            Kortti k = alkiot[i];
-            if (k == null) continue;
+        for (Kortti k : alkiot) {
+            if (k == null) continue; // TODO: Nyt ei pitäisi olla mahdollista, voiko poistaa?
             if (k.getID() == kid) return k.getNimi();
         }
-        return "Ei löydy"; //TODO: selvitä, miksei testi toimi vaikka mainissa toimii
+        return "Ei löydy";
     }
-    
-    
+
+
     @Override
     /**
      * @example
@@ -147,33 +179,34 @@ public class Kortit {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder("kID|kortin nimi|kpl|cmc");
-        for (int i = 0; i < lkm; i++) {
-            sb.append("\n"+alkiot[i]);
+        for (Kortti k : alkiot) {
+            sb.append("\r\n" + k.toString());
         }
         return sb.toString();
     }
-    
-    
+
+
     /**
      * Testaamisen avuksi korttien tiedot merkkijonona.
      * @return Korttien tiedot merkkijonoina
      */
     public String testiString() {
-      StringBuilder sb = new StringBuilder();
-      for (Kortti kortti : alkiot) {
-          if (kortti == null) continue;
-           sb.append(kortti.testiString());
+        StringBuilder sb = new StringBuilder();
+        for (Kortti kortti : alkiot) {
+            if (kortti == null)
+                continue;
+            sb.append(kortti.testiString());
         }
-      return sb.toString();
+        return sb.toString();
     }
-    
+
 
     /**
      * Testataan Kortit-luokkaa.
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-        
+
         Kortit kortit = new Kortit();
         Kortti kortti1 = new Kortti("Eka kortti", 1, 1);
         Kortti kortti2 = new Kortti("Muut kortit", 2, 2);
@@ -186,26 +219,17 @@ public class Kortit {
         System.out.println(kortit.annaNimi(1));
         System.out.println(kortit.annaNimi(2));
 
-           /* Kortit kortit = new Kortit();
-           int j = 0; 
-           while(j <= 10) {
-               kortit.lisaa(new Kortti().jaceKortti());
-               j++;
-           }
-           while(j <= 20) {
-               kortit.lisaa(new Kortti().mageKortti());
-               j++;
-           }
-        System.out.println(kortit);   
-        System.out.println();
-
-        System.out.println("========== Kortit - testi ========== ");
-        for (int i = 0; i < kortit.getLkm(); i++) {
-            Kortti kortti = kortit.anna(i);
-            System.out.println("Kortti indeksillä " + i);
-            kortti.tulosta(System.out);
-            System.out.println();
-        }*/
+        /*
+         * Kortit kortit = new Kortit(); int j = 0; while(j <= 10) {
+         * kortit.lisaa(new Kortti().jaceKortti()); j++; } while(j <= 20) {
+         * kortit.lisaa(new Kortti().mageKortti()); j++; }
+         * System.out.println(kortit); System.out.println();
+         * 
+         * System.out.println("========== Kortit - testi ========== "); for (int
+         * i = 0; i < kortit.getLkm(); i++) { Kortti kortti = kortit.anna(i);
+         * System.out.println("Kortti indeksillä " + i);
+         * kortti.tulosta(System.out); System.out.println(); }
+         */
 
     }
 

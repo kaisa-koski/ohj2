@@ -30,7 +30,7 @@ public class Tyypit {
      * ei tehdä mitään.
      * @param tyyppi Lisättävä tyyppi
      */
-    public void lisaa(Tyyppi tyyppi) {
+    private void lisaa(Tyyppi tyyppi) {
         if (lkm >= MAX_TYYPIT) return; //TODO: Poikkeus?
         alkiot[lkm] = tyyppi;
         lkm++;

@@ -34,7 +34,6 @@ public class Linkki {
         this.kid = kid;
         this.kp = kp;
         this.kk = kk;
-        this.rekisteroi(); //TODO: Rekisteröinti ehkä erikseen?
     }
     
     /**
@@ -53,16 +52,24 @@ public class Linkki {
      * @example
      * <pre name="test">
      * Linkki linkki1 = new Linkki(1,2,4,4);
+     * int n1 = linkki1.rekisteroi();
      * Linkki linkki2 = new Linkki(2,3,0,1);
-     * int n1 = linkki1.getID();
-     * int n2 = linkki2.getID();
+     * int n2 =linkki2.rekisteroi();
      * n2 === n1+1;
+     * int n3 = linkki1.rekisteroi();
+     * n1 === n3;
      * </pre>
      */
     public int rekisteroi() {
+        if (this.lid != 0) return this.lid;
         this.lid = seuraavaID;
         seuraavaID++;
         return this.lid;
+    }
+    
+    @Override
+    public String toString() {
+        return lid + "|" + pid + "|" + kid + "|" + kp + "|" + kk;
     }
    
     
