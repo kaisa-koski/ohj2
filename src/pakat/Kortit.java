@@ -20,7 +20,7 @@ public class Kortit implements Iterable<Kortti> {
 
     private final Collection<Kortti> alkiot = new ArrayList<Kortti>(); // Kysymys ohjaajalle: Miten final vaikuttaa? Taisi olla ettei pysty enää laittaa viittaamaan muualle, mutta sisältöä voi muuttaa?
     private boolean muutettu = false;
-    private String tiedosto = "";
+    private String tiedosto = "kortit.dat";
 
     /**
      * Kortit-alustaminen
@@ -31,10 +31,10 @@ public class Kortit implements Iterable<Kortti> {
     
     /**
      * Luodaan alustava taulukko
-     * @param tiedosto Tallennustiedoston nimi
+     * @param kansio Tallennuskansion nimi
      */
-    public Kortit(String tiedosto) {
-        this.tiedosto = tiedosto;
+    public Kortit(String kansio) {
+        this.tiedosto = kansio+"\\kortit.dat";
     }
 
 
@@ -46,11 +46,9 @@ public class Kortit implements Iterable<Kortti> {
             while ( fi.hasNext() ) {
                 try {
                     String s = fi.nextLine();
-                    String[] palat = s.split("\\|");
-                    String nimi = palat[1];
-                    int kpl = Integer.parseInt(palat[2]);
-                    int cmc = Integer.parseInt(palat[3]);
-                    lisaa(new Kortti(nimi, kpl, cmc));
+                    Kortti kortti = new Kortti();
+                    kortti.parse(s);
+                    lisaa(kortti);
                 } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                     continue;
                 }
@@ -141,6 +139,20 @@ public class Kortit implements Iterable<Kortti> {
       throw new IndexOutOfBoundsException("Korttia ei löydy");
     }
     
+    
+    /**
+     * Palauttaa kortin, jolla on parametrina annettu
+     * id.
+     * @param kid Kortin id
+     * @return Kortti annetulla id:llä
+     */
+    public Kortti getKortti(int kid) {
+        for(Kortti k : alkiot) {
+            if (k.getID() == kid) return k;
+        }
+        return null;
+    }
+    
 
 
     /**
@@ -180,7 +192,7 @@ public class Kortit implements Iterable<Kortti> {
     public String toString() {
         StringBuilder sb = new StringBuilder("kID|kortin nimi|kpl|cmc");
         for (Kortti k : alkiot) {
-            sb.append("\r\n" + k.toString());
+            sb.append("\n" + k.toString());
         }
         return sb.toString();
     }

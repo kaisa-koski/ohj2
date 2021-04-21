@@ -42,6 +42,32 @@ public class Pakka {
         this.tyyppi = tyyppi;
         this.muistiinpanot = korjattuMp;
     }
+    
+    
+    /**
+     * Tietojen poimiminen merkkijonosta 
+     * @param mj Merkkijono
+     * @throws NumberFormatException Jos epäkelpo merkkijono
+     */
+    public void parse(String mj) throws NumberFormatException {
+        String[] palat = mj.split("\\|");
+        setID(Integer.parseInt(palat[0]));
+        nimi = palat[1];
+        tyyppi = Integer.parseInt(palat[2]);
+        muistiinpanot = palat[3];
+    }
+    
+    
+    /**
+     * Asettaa tunnusnumeron ja tarkistaa, että seuraavaID
+     * pysyy ajan tasalla.
+     * @param luku Asetettava id-numero
+     */
+    private void setID(int luku) {
+        pid = luku;
+        if (pid >= seuraavaID) seuraavaID = pid + 1;
+    }
+
 
 
     /**
@@ -59,10 +85,13 @@ public class Pakka {
      * </pre>
      */
     public int rekisteroi() {
+        if (this.pid != 0) return this.pid;
         this.pid = seuraavaID;
         seuraavaID++;
         return this.pid;
     }
+    
+    
 
 
     /**

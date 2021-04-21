@@ -106,7 +106,7 @@
                   <Label text="Tyyppi: " GridPane.halignment="LEFT" GridPane.rowIndex="2" />
                   <Label text="Muistiinpanot:" GridPane.halignment="LEFT" GridPane.rowIndex="3" />
                   <Label fx:id="labelPakanTyyppi" text="Modern" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" />
-                  <Button mnemonicParsing="false" onAction="#handleAktivoi" prefWidth="80.0" text="TALLENNA" textFill="#0bbc17" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER"> //TODO: Väliaikainen tallenna, vaihda takaisin "Aktivoi"
+                  <Button mnemonicParsing="false" onAction="#handleAktivoi" prefWidth="80.0" text="AKTIVOI" textFill="#0bbc17" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="CENTER"> //TODO: Väliaikainen tallenna, vaihda takaisin "Aktivoi"
                      <GridPane.margin>
                         <Insets top="10.0" />
                      </GridPane.margin>
@@ -172,14 +172,14 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="labelKortinNimi" text="Jace, the Mind Sculptor" />
-                  <Label fx:id="labelKortinCmc" text="Cmc: 4" />
-                  <Label fx:id="labelKortinKpl" text="Omistuksessa: 1 kpl" />
+                  <Label fx:id="labelKortinNimi" />
+                  <Label fx:id="labelKortinCmc" />
+                  <Label fx:id="labelKortinKpl" />
                   <Button mnemonicParsing="false" onAction="#handleMuokkausKortti" text="Muokkaa" />
                   <Label text="Sijainnit:" />
-                  <ListChooser fx:id="chooserKortinPakatTrue" onMouseReleased="#handlePakka" prefHeight="72.0" prefWidth="248.0" rivit="Izzet Control (1 kpl)&#10;" />
+                  <ListChooser fx:id="chooserKortinPakatTrue" onMouseReleased="#handlePakka" prefHeight="72.0" prefWidth="248.0" />
                   <Label text="Muut pakat, joihin kuuluu:" />
-                  <ListChooser fx:id="chooserKortinPakatFalse" onMouseReleased="#handlePakka" prefHeight="124.0" prefWidth="248.0" rivit="Kefnet (1 kpl)&#10;" />
+                  <ListChooser fx:id="chooserKortinPakatFalse" onMouseReleased="#handlePakka" prefHeight="124.0" prefWidth="248.0" />
                </children>
                <BorderPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

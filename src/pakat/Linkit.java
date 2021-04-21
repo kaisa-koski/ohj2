@@ -22,7 +22,7 @@ import java.util.Scanner;
 public class Linkit implements Iterable<Linkki> {
 
     private final Collection<Linkki> alkiot = new ArrayList<Linkki>();
-    private String tiedosto = "";
+    private String tiedosto = "linkit.dat";
     private boolean muutettu = false;
 
     private final static int EI_PAKASSA = 1;
@@ -36,7 +36,7 @@ public class Linkit implements Iterable<Linkki> {
     
     /**
      * Linkkien alustaminen 
-     * @param tiedosto Tiedoston nimi
+     * @param tiedosto Tallennustiedoston nimi
      */
     public Linkit(String tiedosto) {
         this.tiedosto = tiedosto;
@@ -57,14 +57,9 @@ public class Linkit implements Iterable<Linkki> {
             while ( fi.hasNext() ) {
                 try {
                     String s = fi.nextLine();
-                    //Linkki linkki = new Linkki(); //TODO: Mieti vielä tätä toteutusta
-                    //linkki.parse(s);
-                    String[] palat = s.split("\\|");
-                    int pid = Integer.parseInt(palat[1]);
-                    int kid = Integer.parseInt(palat[2]);
-                    int kp = Integer.parseInt(palat[3]);
-                    int kk = Integer.parseInt(palat[4]);
-                    lisaa(new Linkki(pid, kid, kp, kk)); //TODO: Kysymys ohjaajalle: Onko tämä huonompi tapa kuin malli-ht:n parse ja olion tietojen muokkaaminen? Nyt kuitenkin id päivitttyy itse
+                    Linkki linkki = new Linkki(); 
+                    linkki.parse(s);
+                    lisaa(linkki);
                 } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                     continue;
                 }
@@ -359,8 +354,36 @@ public class Linkit implements Iterable<Linkki> {
         }
         return pidlista;
     }
+    
+    
+    /**
+     * Palauttaa luokan linkeistä, joilla on parametrina annettu
+     * pakkaID.
+     * @param pid Pakan ID
+     * @return Linkkilista
+     */
+    public List<Linkki> pakanLinkit(int pid){
+    List<Linkki> pakanLinkit = new ArrayList<Linkki>();
+    for (Linkki linkki : alkiot) {
+        if (linkki.getPID() == pid) pakanLinkit.add(linkki);
+        }
+    return pakanLinkit;
+    }
 
-
+    /**
+     * Palauttaa luokan linkeistä, joilla on parametrina annettu
+     * korttiID.
+     * @param kid Kortin id
+     * @return Linkkilista
+     */
+    public List<Linkki> kortinLinkit(int kid){
+    List<Linkki> kortinLinkit = new ArrayList<Linkki>();
+    for (Linkki linkki : alkiot) {
+        if (linkki.getKID() == kid) kortinLinkit.add(linkki);
+        }
+    return kortinLinkit;
+    }
+    
     /**
      * Palauttaa totuusarvon siitä, onko pakka aktiivinen, eli sijaitsevatko
      * kaikki pakkaan kuuluvat kortit sillä hetkellä pakassa.
@@ -402,7 +425,7 @@ public class Linkit implements Iterable<Linkki> {
     public String toString() {
         StringBuilder sb = new StringBuilder("lid|pid|kid| kpl nyt pakassa | kpl pakkaan kuuluu");
         for (Linkki l : alkiot) {
-            sb.append("\r\n" + l.toString());
+            sb.append("\n" + l.toString());
         }
         return sb.toString();
     }

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package pakat;
 
 import java.util.ArrayList;
@@ -17,22 +14,22 @@ public class Pakkarekisteri {
     private Tyypit tyypit;
     private Pakat pakat;
     private Kortit kortit;
+  //  private final String kansio; //TODO: Kansion nimen määrittäminen?
 
     /**
      * Pakkarekisterin luominen
      */
     public Pakkarekisteri() {
-        this.linkit = new Linkit("linkit.dat");
+        this.linkit = new Linkit();
         this.tyypit = new Tyypit();
-        this.pakat = new Pakat("pakat.dat");
-        this.kortit = new Kortit("kortit.dat");
-        this.lataaTiedot(); //TODO: Mieti, miten kannattaa tehdä (huomioi ei-pakassa luominen)
+        this.pakat = new Pakat();
+        this.kortit = new Kortit();
     }
     
     /**
      * Ladataan tiedot tallennustiedostosta.
      */
-    private void lataaTiedot() {
+    public void lataaTiedot() {
         linkit.lataa();
         pakat.lataa();
         kortit.lataa();
@@ -105,6 +102,47 @@ public class Pakkarekisteri {
     public String etsiTyyppi(int tid) {
         return tyypit.etsi(tid);
     }
+    
+    /**
+     * Palauttaa kortin, jolla on parametrina annettu
+     * id.
+     * @param kid Kortin id
+     * @return Kortti annetulla id:llä
+     */
+    public Kortti getKortti(int kid) {
+        return kortit.getKortti(kid);
+    }
+    
+    /**
+     * Palauttaa pakan, jolla on parametrina annettu
+     * id.
+     * @param pid Pakan id
+     * @return Pakka annetulla id:llä
+     */
+    public Pakka getPakka(int pid) {
+        return pakat.getPakka(pid);
+    }
+
+    /**
+     * Palauttaa linkkilistan, joka sisältää parametrina annettuun
+     * pakan ID:seen liittyvät linkit.
+     * @param pid Pakan indeksi
+     * @return Korttilista pakan korteista
+     */
+    public List<Linkki> pakanLinkit(int pid){
+        return linkit.pakanLinkit(pid);
+    }
+    
+    /**
+     * Palauttaa linkkilistan, joka sisältää parametrina annettuun
+     * pakan ID:seen liittyvät linkit.
+     * @param kid Kortin indeksi
+     * @return Korttilista pakan korteista
+     */
+    public List<Linkki> kortinLinkit(int kid){
+        return linkit.kortinLinkit(kid);
+    }
+    
     
     /**
      * Palauttaa korttilistan, joka sisältää pyydetyn pakan

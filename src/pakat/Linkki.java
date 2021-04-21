@@ -6,13 +6,13 @@ package pakat;
  *
  */
 public class Linkki {
-    
-    private int lid;    //linkin id
-    private int pid;    //pakan id
-    private int kid;    //kortin id
-    private int kp;     //kappaleita pakassa
-    private int kk;     //kappaleita kuuluu pakkaan
-    
+
+    private int lid; // linkin id
+    private int pid; // pakan id
+    private int kid; // kortin id
+    private int kp; // kappaleita pakassa
+    private int kk; // kappaleita kuuluu pakkaan
+
     private static int seuraavaID = 1;
 
     /**
@@ -21,7 +21,8 @@ public class Linkki {
     public Linkki() {
         //
     }
-    
+
+
     /**
      * Uuden linkin luominen
      * @param pid Pakan id
@@ -29,23 +30,57 @@ public class Linkki {
      * @param kp Kappaleita pakassa sillä hetkellä
      * @param kk Kappaleita kuuluu pakkaan
      */
-    public Linkki(int pid, int kid, int kp, int kk) { //TODO: Tarkistukset, onko parametrit pienempiä kuin nolla? Onko kp isompi kuin kk?
+    public Linkki(int pid, int kid, int kp, int kk) { // TODO: Tarkistukset,
+                                                      // onko parametrit
+                                                      // pienempiä kuin nolla?
+                                                      // Onko kp isompi kuin kk?
         this.pid = pid;
         this.kid = kid;
         this.kp = kp;
         this.kk = kk;
     }
-    
+
+
     /**
      * Uuden linkin luominen, kp oletuksena 0.
      * @param pid Pakan id
      * @param kid Kortin id
      * @param kk Kappaleita kuuluu pakkaan
      */
-    public Linkki(int pid, int kid, int kk) { //TODO: Tarkistukset, onko parametrit pienempiä kuin nolla? Onko kp isompi kuin kk?
+    public Linkki(int pid, int kid, int kk) { // TODO: Tarkistukset, onko
+                                              // parametrit pienempiä kuin
+                                              // nolla? Onko kp isompi kuin kk?
         this(pid, kid, 0, kk);
     }
-    
+
+
+    /**
+     * Tietojen poimiminen tiedoston merkkijonosta 
+     * @param mj Merkkijono
+     * @throws NumberFormatException Jos epäkelpo merkkijono
+     */
+    public void parse(String mj) throws NumberFormatException {
+        String[] palat = mj.split("\\|");
+        setID(Integer.parseInt(palat[0]));
+        pid = Integer.parseInt(palat[1]);
+        kid = Integer.parseInt(palat[2]);
+        kp = Integer.parseInt(palat[3]);
+        kk = Integer.parseInt(palat[4]);
+    }
+
+
+    /**
+     * Asettaa tunnusnumeron ja tarkistaa, että seuraavaID
+     * pysyy ajan tasalla.
+     * @param luku Asetettava id-numero
+     */
+    private void setID(int luku) {
+        lid = luku;
+        if (lid >= seuraavaID)
+            seuraavaID = lid + 1;
+    }
+
+
     /**
      * Asetetaan linkille seuraava vapaana oleva ID-numero.
      * @return Linkille annettu ID-numero
@@ -66,36 +101,39 @@ public class Linkki {
         seuraavaID++;
         return this.lid;
     }
-    
+
+
     @Override
     public String toString() {
         return lid + "|" + pid + "|" + kid + "|" + kp + "|" + kk;
     }
-   
-    
+
+
     /**
      * @return Palauttaa linkin ID:n
      */
     public int getID() {
         return this.lid;
     }
-    
+
+
     /**
      * @return Palauttaa kortin ID:n
      */
     public int getKID() {
         return this.kid;
     }
-    
+
+
     /**
      * @return Palauttaa kortin ID:n
      */
-    
-    
+
     public int getPID() {
         return this.pid;
     }
-    
+
+
     /**
      * @return Palauttaa luvun, kuinka monta kyseistä korttia 
      * pakassa sillä hetkellä sijaitsee.
@@ -103,8 +141,8 @@ public class Linkki {
     public int getKp() {
         return this.kp;
     }
-    
-    
+
+
     /**
      * @return Palauttaa luvun, kuinka monta kyseistä korttia 
      * pakkaan kaikenkaikkiaan kuuluu
@@ -112,25 +150,28 @@ public class Linkki {
     public int getKk() {
         return this.kk;
     }
-    
+
+
     /**
      * Muuttaa pakassa sijaitsevien korttien määrää.
      * @param uusiKp Uusi pakassa sijaitsevien korttien määrä
      */
     public void setKp(int uusiKp) {
-        if (uusiKp < 0 || this.kk < uusiKp) return;
+        if (uusiKp < 0 || this.kk < uusiKp)
+            return;
         this.kp = uusiKp;
     }
-    
-    //TODO: toString
+
+    // TODO: toString
+
 
     /**
      * Testataan Linkki-luokkaa
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-    // TODO Auto-generated method stub
-    
+        // TODO Auto-generated method stub
+
     }
 
 }

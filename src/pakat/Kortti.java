@@ -38,6 +38,30 @@ public class Kortti {
         this.maara = maara;
         this.cmc = cmc;
     }
+    
+    /**
+     * Tietojen poimiminen merkkijonosta 
+     * @param mj Merkkijono
+     * @throws NumberFormatException Jos epäkelpo merkkijono
+     */
+    public void parse(String mj) throws NumberFormatException {
+        String[] palat = mj.split("\\|");
+        setID(Integer.parseInt(palat[0]));
+        nimi = palat[1];
+        maara = Integer.parseInt(palat[2]);
+        cmc = Integer.parseInt(palat[3]);
+    }
+    
+    
+    /**
+     * Asettaa tunnusnumeron ja tarkistaa, että seuraavaID
+     * pysyy ajan tasalla.
+     * @param luku Asetettava id-numero
+     */
+    private void setID(int luku) {
+        kid = luku;
+        if (kid >= seuraavaID) seuraavaID = kid + 1;
+    }
 
 
     /**
@@ -112,6 +136,7 @@ public class Kortti {
      * </pre>
      */
     public int rekisteroi() {
+        if (this.kid != 0) return this.kid;
         this.kid = seuraavaID;
         seuraavaID++;
         return this.kid;
