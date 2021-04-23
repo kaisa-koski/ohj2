@@ -6,12 +6,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
 /**
+ * TÄLLÄ HETKELLÄ EI KÄYTÖSSÄ
  * Luokka, jonka ikkuna avautuu kun käyttäjä on 
  * painanut pakan Lisää/Poista-napista. Valitaan, halutaanko
  * kortteja poistaa pakasta vai lisätä pakkaan.
  * 
  * @author Kaisa Koski
- * @version 16.2.2021
+ * @version 23.4.2021
  *
  */
 public class LisaaPoistaPakastaController

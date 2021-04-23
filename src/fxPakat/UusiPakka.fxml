@@ -46,12 +46,12 @@
                </GridPane.margin>
             </Button>
             <Button mnemonicParsing="false" onAction="#handleTallenna" text="Tallenna" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <TextField fx:id="textNimi" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="editNimi" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>
             </TextField>
-            <Label alignment="CENTER" contentDisplay="RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="165.0" text="Luo uusi pakka" GridPane.halignment="RIGHT">
+            <Label alignment="CENTER" contentDisplay="RIGHT" minHeight="-Infinity" minWidth="-Infinity" prefHeight="17.0" prefWidth="165.0" text="Muokkaa/poista pakka" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
@@ -61,8 +61,8 @@
                   <Insets left="60.0" />
                </padding>
             </Label>
-            <ComboBoxChooser rivit="Modern&#10;Standard&#10;Pioner&#10;Commander&#10;Muu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <TextField layoutX="189.0" layoutY="61.0" promptText="esim. kotelon tuntomerkit" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <ComboBoxChooser fx:id="chooserTyyppi" rivit="1 Modern&#10;2 Standard&#10;3 Pioner&#10;4 Commander&#10;5 Muu" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="editMp" layoutX="189.0" layoutY="61.0" promptText="esim. kotelon tuntomerkit" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="10.0" />
                </GridPane.margin>

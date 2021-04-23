@@ -52,6 +52,24 @@ public class Linkki {
                                               // nolla? Onko kp isompi kuin kk?
         this(pid, kid, 0, kk);
     }
+    
+    /**
+     * Linkin luominen pelkällä kortin id:llä ja korttien määrällä
+     * @param kid Kortin id
+     * @param kk Kappaleita kuuluu pakkaan
+     */
+    public Linkki(int kid, int kk) {
+        this(0, kid, kk);
+    }
+    
+    /**
+     * Lisätään pakan id, jos linkillä ei sitä
+     * vielä ole
+     * @param uusiPid Uusi pakan ID
+     */
+    public void lisaaPid(int uusiPid) {
+        if (pid == 0) pid = uusiPid;
+    }
 
 
     /**

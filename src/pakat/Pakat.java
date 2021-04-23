@@ -60,8 +60,15 @@ public class Pakat {
             lisaaEiPakassa();
             return;
         }
+        muutettu = false;
     }
-
+    
+    /**
+     * Muuttaa muutettu -muuttujan todeksi.
+     */
+    public void muokattu() {
+        muutettu = true;
+    }
 
     /**
      * Tallennetaan tiedot tiedostoon, jos on tullut muutoksia.
@@ -94,17 +101,18 @@ public class Pakat {
      * <pre name="test">
      * Pakat pakat = new Pakat();
      * Pakka izzet1 = new Pakka(), izzet2 = new Pakka();
-     * pakat.getLkm() === 0+1;
-     * pakat.lisaa(izzet1); pakat.getLkm() === 1+1;
-     * pakat.lisaa(izzet2); pakat.getLkm() === 2+1;
-     * pakat.lisaa(izzet1); pakat.getLkm() === 3+1;
-     * pakat.anna(0+1) === izzet1;
-     * pakat.anna(1+1) === izzet2;
-     * pakat.anna(2+1) === izzet1;
-     * pakat.anna(1+1) == izzet1 === false;
-     * pakat.anna(1+1) == izzet2 === true;
-     * pakat.anna(3+1) === izzet1; #THROWS IndexOutOfBoundsException
-     * pakat.lisaa(izzet1); pakat.getLkm() === 4+1;
+     * pakat.getLkm() === 0;
+     * pakat.lisaa(izzet1); pakat.getLkm() === 1;
+     * pakat.lisaa(izzet2); pakat.getLkm() === 2;
+     * pakat.lisaa(izzet1); pakat.getLkm() === 3;
+     * pakat.anna(0) === izzet1;
+     * pakat.anna(1) === izzet2;
+     * pakat.anna(2) === izzet1;
+     * pakat.anna(1) == izzet1 === false;
+     * pakat.anna(1) == izzet2 === true;
+     * pakat.anna(3) === izzet1; #THROWS IndexOutOfBoundsException
+     * pakat.lisaa(izzet1); pakat.lisaa(izzet1);
+     * pakat.getLkm() === 5;
      * pakat.lisaa(izzet1); pakat.getLkm() > 5 === true;     
      * </pre> 
      */
@@ -121,11 +129,12 @@ public class Pakat {
      * @example
      * <pre name="test">
      * Pakat pakat = new Pakat();
-     * pakat.getLkm() === 1;
+     * pakat.getLkm() === 0;
      * pakat.getKoko() === 5;
      * pakat.lisaa(new Pakka()); pakat.lisaa(new Pakka());
      * pakat.lisaa(new Pakka()); pakat.lisaa(new Pakka());
-     * pakat.lisaa(new Pakka()); pakat.getLkm() === 6;
+     * pakat.lisaa(new Pakka()); pakat.lisaa(new Pakka());
+     * pakat.getLkm() === 6;
      * pakat.getKoko() === 10;
      * </pre>
      */
@@ -145,22 +154,22 @@ public class Pakat {
      * @example
      * <pre name="test">
      * Pakat pakat = new Pakat();
-     * pakat.getLkm() === 1;
+     * pakat.getLkm() === 0;
      * pakat.getKoko() === 5;
      * pakat.lisaa(new Pakka("Eka pakka", 1, "")); pakat.lisaa(new Pakka("Toka pakka", 1, ""));
      * pakat.lisaa(new Pakka("Kolmas pakka", 1, "")); pakat.lisaa(new Pakka("Neljäs pakka", 1, ""));
-     * pakat.anna(0).getNimi() === "Korttivarasto";
-     * Pakka eka = pakat.anna(1);
-     * eka.getNimi() === "Eka pakka";
-     * pakat.anna(2).getNimi() === "Toka pakka";
-     * pakat.anna(4).getNimi() === "Neljäs pakka";
-     * pakat.getLkm() === 5;
-     * pakat.poista(eka);
-     * pakat.anna(0).getNimi() === "Korttivarasto";
-     * pakat.anna(1).getNimi() === "Toka pakka";
+     * pakat.anna(0).getNimi() === "Eka pakka";
+     * Pakka toka= pakat.anna(1);
+     * toka.getNimi() === "Toka pakka";
      * pakat.anna(2).getNimi() === "Kolmas pakka";
+     * pakat.anna(3).getNimi() === "Neljäs pakka";
+     * pakat.getLkm() === 4;
+     * pakat.poista(toka);
+     * pakat.anna(0).getNimi() === "Eka pakka";
+     * pakat.anna(1).getNimi() === "Kolmas pakka";
+     * pakat.anna(2).getNimi() === "Neljäs pakka";
      * pakat.anna(4) === null; #THROWS IndexOutOfBoundsException 
-     * pakat.getLkm() === 4;     
+     * pakat.getLkm() === 3;     
      * </pre>
      */
     public void poista(Pakka p) {
@@ -209,7 +218,7 @@ public class Pakat {
      * @return Pakka pyydetystä indeksistä
      */
     public Pakka getPakka(int pid) {
-        for (int i = 0; i < alkiot.length; i++) {
+        for (int i = 0; i < lkm; i++) {
             if (alkiot[i].getID() == pid) return alkiot[i];
         }
         return null;
@@ -220,10 +229,9 @@ public class Pakat {
      * @example
      * <pre name="test">
      * Pakat pakat = new Pakat();
-     * pakat.getLkm() === 1;
+     * pakat.getLkm() === 0;
      * pakat.lisaa(new Pakka("Eka pakka", 1, "")); pakat.lisaa(new Pakka("Toka pakka", 1, "")); 
-     * pakat.anna(0).getNimi() === "Korttivarasto";
-     * pakat.toString() === "pID|Pakan nimi|Pakan tyyppi|Omat muistiinpanot\n"+pakat.anna(0).getID()+"|Korttivarasto|5|Tällä hetkellä ei pakassa\n"+pakat.anna(1).getID()+"|Eka pakka|1|\n"+pakat.anna(2).getID()+"|Toka pakka|1|";
+     * pakat.toString() === "pID|Pakan nimi|Pakan tyyppi|Omat muistiinpanot\n"+pakat.anna(0).getID()+"|Eka pakka|1|\n"+pakat.anna(1).getID()+"|Toka pakka|1|";
      *  </pre>
      */
     public String toString() {

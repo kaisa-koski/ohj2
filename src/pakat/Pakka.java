@@ -43,6 +43,31 @@ public class Pakka {
         this.muistiinpanot = korjattuMp;
     }
     
+    /**
+     * Pakan tietojen muokkaaminen
+     * @param uusiNimi Pakan uusi nimi
+     * @param uusiTyyppi Uusi tyyppi
+     * @param uusiMp Uudet muistiinpanot
+     */
+    public void muokkaa(String uusiNimi, int uusiTyyppi, String uusiMp) {
+        String korjattuNimi = Tarkistus.mjTarkistus(uusiNimi);
+        String korjattuMp = Tarkistus.mjTarkistus(uusiMp);
+        this.nimi = korjattuNimi;
+        this.tyyppi = uusiTyyppi;
+        this.muistiinpanot = korjattuMp;
+    }
+    
+    
+    /**
+     * Pakan tietojen muokkaaminen toisen pakan mukaiseksi
+     * @param pakka Pakka jonka mukaisiksi tiedot muokataan
+     */
+    public void muokkaa(Pakka pakka) {
+        nimi = pakka.getNimi();
+        tyyppi = pakka.getTyyppi();
+        muistiinpanot = pakka.getMuistiinpanot();
+    }
+    
     
     /**
      * Tietojen poimiminen merkkijonosta 

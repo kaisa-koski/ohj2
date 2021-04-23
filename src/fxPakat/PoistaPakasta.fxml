@@ -10,13 +10,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxPakat.PoistaPakastaController">
    <top>
       <VBox prefHeight="55.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <Label alignment="CENTER" prefHeight="29.0" prefWidth="600.0" text="Olet poistamassa kortteja pakasta:" />
-            <Label alignment="CENTER" prefHeight="28.0" prefWidth="400.0" fx:id="labelPakka" text="Izzet Control" />
+            <Label fx:id="textPakka" alignment="CENTER" prefHeight="28.0" prefWidth="400.0" text="???" />
          </children>
       </VBox>
    </top>
@@ -25,7 +24,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="392.0">
                <children>
-                  <CheckBoxChooser layoutX="8.0" layoutY="2.0" prefHeight="150.0" prefWidth="374.0" rivit="Jace, the Mind Sculptor (1 kpl)&#10;Serum Visions (1 kpl)&#10;Snapcaster Mage (2 kpl)&#10;&#10;" />
+                  <CheckBoxChooser fx:id="chooserKortit" layoutX="8.0" layoutY="2.0" prefHeight="150.0" prefWidth="374.0" />
                </children>
             </AnchorPane>
         </content>
@@ -39,7 +38,7 @@
                   <Insets bottom="30.0" left="80.0" right="30.0" top="30.0" />
                </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" onAction="#handlePoista" text="Poista pakasta">
+            <Button mnemonicParsing="false" onAction="#handlePoista" prefHeight="25.0" prefWidth="103.0" text="Poista pakasta">
                <HBox.margin>
                   <Insets bottom="30.0" left="80.0" right="30.0" top="30.0" />
                </HBox.margin>

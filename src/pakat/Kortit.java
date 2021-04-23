@@ -57,6 +57,7 @@ public class Kortit implements Iterable<Kortti> {
             System.err.println("Tiedosto ei aukea! " + ex.getMessage());
             return;
         }
+        muutettu = false;
     }
 
 
@@ -141,6 +142,20 @@ public class Kortit implements Iterable<Kortti> {
     
     
     /**
+     * Palauttaa annetulla merkkijonolla alkavan nimen jos sellainen löytyy
+     * @param nimi Nimi jolla korttia etsitään
+     * @return Kortti tai null
+     */
+    public Kortti anna(String nimi) {
+        String nimiPienella = nimi.toLowerCase();
+        for (Kortti k : this) {
+            if (k.getNimi().toLowerCase().startsWith(nimiPienella)) return k;
+        }
+        return null;
+    }
+    
+    
+    /**
      * Palauttaa kortin, jolla on parametrina annettu
      * id.
      * @param kid Kortin id
@@ -151,6 +166,14 @@ public class Kortit implements Iterable<Kortti> {
             if (k.getID() == kid) return k;
         }
         return null;
+    }
+    
+    
+    /**
+     * Asetetaan muutettu-muuttuja todeksi
+     */
+    public void muokattu() {
+        muutettu = true;
     }
     
 

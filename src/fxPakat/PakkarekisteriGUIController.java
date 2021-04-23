@@ -9,8 +9,10 @@ import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import pakat.Kortti;
 import pakat.Linkki;
 import pakat.Pakka;
@@ -18,13 +20,15 @@ import pakat.Pakkarekisteri;
 
 /**
  * Käyttöliittymän pääikkunan toiminnasta vastaava luokka.
- *  
+ *  //TODO: Aktivointi ei toimi vielä
  * @author Kaisa Koski
- * @version 16.3.2021
+ * @version 22.4.2021
  *
  */
 public class PakkarekisteriGUIController implements Initializable {
 
+    @FXML
+    private Button buttonAktivoi;
     @FXML
     private ListChooser<Pakka> chooserPakat;
     @FXML
@@ -47,9 +51,10 @@ public class PakkarekisteriGUIController implements Initializable {
     private ListChooser<Pakka> chooserKortinPakatTrue;
     @FXML
     private ListChooser<Pakka> chooserKortinPakatFalse;
+
     @FXML
     private void handleAktivoi() {
-       aktivoi();
+        aktivoi();
     }
 
 
@@ -57,11 +62,17 @@ public class PakkarekisteriGUIController implements Initializable {
     public void initialize(URL url, ResourceBundle bundle) {
         alusta();
     }
-    
-    
+
+
     @FXML
-    private void handleLisaaPoistaKortti() {
-        lisaaKortti();
+    private void handleLisaaKortti() {
+        lisaaKorttiPakkaan();
+    }
+
+
+    @FXML
+    private void handlePoistaKortti() {
+        poistaKorttiPakasta();
     }
 
 
@@ -92,16 +103,19 @@ public class PakkarekisteriGUIController implements Initializable {
 
     @FXML
     private void handlePakka() {
-        /*Dialogs.showMessageDialog(
-                "Halusit katsoa klikkaamasi pakan tietoja, mutta ei toimi vielä");*/
+        /*
+         * Dialogs.showMessageDialog(
+         * "Halusit katsoa klikkaamasi pakan tietoja, mutta ei toimi vielä");
+         */
     }
 
 
     @FXML
     private void handleKortti() {
-      /*  Dialogs.showMessageDialog(
-                "Halusit katsoa kortin " + chooserKortit.getSelectedText()
-                        + " tietoja, mutta ei toimi vielä");*/
+        /*
+         * Dialogs.showMessageDialog( "Halusit katsoa kortin " +
+         * chooserKortit.getSelectedText() + " tietoja, mutta ei toimi vielä");
+         */
     }
 
 
@@ -138,8 +152,12 @@ public class PakkarekisteriGUIController implements Initializable {
 
     // =========================================================================================================================
 
-   private Pakkarekisteri pakkarekisteri;
-    
+    private Pakkarekisteri pakkarekisteri;
+    private Kortti naytettavaKortti;
+    private Pakka naytettavaPakka;
+
+    private final static int EI_PAKASSA = 1;
+
     /**
      * Asetetaan pakkarekisteri käyttöön
      * @param pakkarekisteri Pakkarekisteri jota käytetään
@@ -147,22 +165,26 @@ public class PakkarekisteriGUIController implements Initializable {
     public void setRekisteri(Pakkarekisteri pakkarekisteri) {
         this.pakkarekisteri = pakkarekisteri;
         pakkarekisteri.lataaTiedot();
-        haePakat(0);  
+        haePakat(0);
     }
-    
+
+
     /**
      * Alustaa tarvittavat asiat, esimerkiksi lisää kuuntelijan
      * pakkalistalle.
      */
-    private void alusta(){
+    private void alusta() {
         chooserPakat.clear();
         chooserKortit.clear();
         chooserPakat.addSelectionListener(e -> naytaPakka(chooserPakat));
-        chooserKortit.addSelectionListener(e -> naytaKortti());
-        chooserKortinPakatTrue.addSelectionListener(e -> naytaPakka(chooserKortinPakatTrue));
-        chooserKortinPakatFalse.addSelectionListener(e -> naytaPakka(chooserKortinPakatFalse));
+        chooserKortit.addSelectionListener(e -> maaritaNaytettavaKortti());
+        chooserKortinPakatTrue
+                .addSelectionListener(e -> naytaPakka(chooserKortinPakatTrue));
+        chooserKortinPakatFalse
+                .addSelectionListener(e -> naytaPakka(chooserKortinPakatFalse));
     }
-    
+
+
     /**
      * Tallentamisen tarkistus ennen sulkemista
      * @return true Jos saa sulkea sovelluksen
@@ -172,14 +194,15 @@ public class PakkarekisteriGUIController implements Initializable {
         return true;
     }
 
-    
+
     /**
      * Tallentaa tiedot tiedostoihin.
      */
     private void tallenna() {
         pakkarekisteri.tallenna();
     }
-    
+
+
     /**
      * Avaa pakan aktivointiin liittyvän ikkunan.
      */
@@ -191,21 +214,53 @@ public class PakkarekisteriGUIController implements Initializable {
 
 
     /**
-     * Hakee korttia käyttäjän kirjoittaman perusteella. Ei toimi vielä.
+     * Hakee korttia käyttäjän kirjoittaman perusteella.
      */
     private void haeKorttia() {
-        Dialogs.showMessageDialog("Hait korttia " + textHaku.getText()
-                + ", mutta haku ei vielä toimi");
+       String haku = textHaku.getText();
+       Kortti haettu = pakkarekisteri.anna(haku);
+       if (haettu != null) 
+       {
+           naytettavaKortti = haettu;
+           naytaKortti(haettu);
+       }
+       
     }
 
+
     /**
-     * Avaa korttien pakkaan lisäämiseen ja pakasta poistamiseen liittyvän ikkunan.
+     * Korttien lisääminen pakkaan
      */
-    private void lisaaKortti() {
-        var resurssi = PakkarekisteriGUIController.class
-                .getResource("LisaaPoistaPakasta.fxml");
-        ModalController.showModal(resurssi, "Lisää/poista", null, "");
+    private void lisaaKorttiPakkaan() {
+        if (naytettavaPakka.getID() == EI_PAKASSA) return;
+        List<Kortti> pKortit = pakkarekisteri.pakanKortit(naytettavaPakka.getID(), false);
+        List<Linkki> lisattavat = LisaaPakkaanController.lisaaKortteja(null, pKortit);
+        for (Linkki l : lisattavat) {
+            l.lisaaPid(naytettavaPakka.getID());
+            pakkarekisteri.lisaa(l);
+        }
+        naytaPakanKortit(naytettavaPakka);
+        naytaKortti(naytettavaKortti);
+        paivitaAktiivisuus();
     }
+
+
+    /**
+     * Korttien poistaminen pakasta
+     */
+    private void poistaKorttiPakasta() { //TODO: EI TOIMI VIELÄ KUNNOLLA, KAATAA OHJELMAN!
+        if (naytettavaPakka.getID() == EI_PAKASSA)
+            return;
+        List<Kortti> pKortit = pakkarekisteri.pakanKortit(naytettavaPakka.getID(), true); 
+        List<Kortti> poistettavat = PoistaPakastaController.poistaKortteja(null, pKortit);
+        if (poistettavat == null) return;
+        for (Kortti k : poistettavat) {
+           pakkarekisteri.poista(naytettavaPakka, k);
+        }
+        naytaPakanKortit(naytettavaPakka);
+        paivitaAktiivisuus();
+    }
+
 
     /**
      * Avaa pakkojen ja korttien listaukseen liittyvän ikkunan.
@@ -221,9 +276,19 @@ public class PakkarekisteriGUIController implements Initializable {
      * Avaa kortin muokkaukseen liittyvän ikkunan.
      */
     private void muokkaaKorttia() {
-        var resurssi = PakkarekisteriGUIController.class
-                .getResource("MuokkausKortti.fxml");
-        ModalController.showModal(resurssi, "Muokkaa", null, "");
+        if (naytettavaKortti == null)
+            return;
+        Kortti muokattava = naytettavaKortti.clone();
+        Kortti tulos = MuokkausKorttiController.muokkaaKorttia(null,
+                muokattava);
+        if (tulos == null) {
+            pakkarekisteri.poista(naytettavaKortti);
+        } else {
+            naytettavaKortti.muokkaa(tulos); //TODO: muokkaus pakkarekisterin kautta
+            pakkarekisteri.korttiaMuokattu();
+        }
+        naytaPakanKortit(naytettavaPakka);
+        naytaKortti(naytettavaKortti);
     }
 
 
@@ -231,9 +296,17 @@ public class PakkarekisteriGUIController implements Initializable {
      * Avaa pakan muokkaukseen liittyvän ikkunan.
      */
     private void muokkaaPakkaa() {
-        var resurssi = PakkarekisteriGUIController.class
-                .getResource("MuokkausPakka.fxml");
-        ModalController.showModal(resurssi, "Muokkaa", null, "");
+        if (naytettavaPakka == null || naytettavaPakka.getID() == EI_PAKASSA) //TODO: Klooni? Kokeile
+            return;
+        Pakka muokattava = naytettavaPakka;
+        Pakka tulos = MuokkausPakkaController.muokkaaPakkaa(null, muokattava);
+        if (tulos == null) {
+            pakkarekisteri.poista(naytettavaPakka);
+        } else {
+            naytettavaPakka.muokkaa(tulos);
+            pakkarekisteri.pakkaaMuokattu();
+        }
+        haePakat(naytettavaPakka.getID());
     }
 
 
@@ -241,33 +314,34 @@ public class PakkarekisteriGUIController implements Initializable {
      * Avaa uuden kortin luomiseen liittyvän ikkunan.
      */
     private void uusiKortti() {
-        Kortti uusi = new Kortti().jaceKortti(); // TODO: Korvaa myöhemmin
+        Kortti uusi = null;
+        uusi = UusiKorttiController.kysyKortti(null, uusi);
+        if (uusi == null)
+            return;
         pakkarekisteri.lisaa(uusi);
-        if (chooserPakat.getSelectedText().equals("Korttivarasto")){
-            Pakka v = chooserPakat.getSelectedObject();
-            naytaPakanKortit(v);
-        } 
-        
-
-       /** var resurssi = PakkarekisteriGUIController.class
-                .getResource("UusiKortti.fxml");
-        ModalController.showModal(resurssi, "Uusi kortti", null, "");*/
+        naytaKortti(uusi);
+        naytaPakanKortit(naytettavaPakka);
     }
-    
+
 
     /**
      * Avaa uuden pakan luomiseen ikkunan.
      */
     private void uusiPakka() {
-        Pakka uusi = new Pakka().izzetPakka(); //TODO: korvaa myöhemmin izzet-pakka dialogilla
+        Pakka uusi = null;
+        uusi = UusiPakkaController.kysyPakka(null, uusi);
+        if (uusi == null)
+            return;
         pakkarekisteri.lisaa(uusi);
         haePakat(uusi.getID());
-        
-      /**  var resurssi = PakkarekisteriGUIController.class
-                .getResource("UusiPakka.fxml");
-        ModalController.showModal(resurssi, "UusiPakka", null, "");*/
+        if (chooserPakat.getSelectedText().equals("Korttivarasto")) {
+            Pakka v = chooserPakat.getSelectedObject();
+            naytaPakanKortit(v);
+            haePakat(uusi.getID());
+        }
     }
-    
+
+
     /**
      * Hakee pakkojen tiedot listaan
      * @param pid Pakan id
@@ -277,25 +351,46 @@ public class PakkarekisteriGUIController implements Initializable {
         int indeksi = 0;
         for (int i = 0; i < pakkarekisteri.getPakatLkm(); i++) {
             Pakka pakka = pakkarekisteri.anna(i);
-            if (pakka.getID() == pid) indeksi = i;
+            if (pakka.getID() == pid)
+                indeksi = i;
             chooserPakat.add(pakka.getNimi(), pakka);
         }
-        chooserPakat.setSelectedIndex(indeksi);
+        chooserPakat.setSelectedIndex(indeksi); // TODO: Tähän ehkä tarvii myös
+                                                // naytettavaPakka = pakka;
     }
-    
-  /**
-   * Näyttää sen pakan tiedot, jonka nimeä on klikattu.
-   * @param valitsin Minkä valitsimen valintaa näytetään
-   */
-    private void naytaPakka(ListChooser<Pakka> valitsin) {
+
+
+    /**
+     * Näyttää sen pakan tiedot, jonka nimeä on klikattu.
+     * @param valitsin Minkä valitsimen valintaa näytetään
+     */
+    private void naytaPakka(ListChooser<Pakka> valitsin) { // TODO: Vaikeudet
+                                                           // eri listojen
+                                                           // välillä
         Pakka p = valitsin.getSelectedObject();
+        naytettavaPakka = p;
         labelPakanNimi.setText(p.getNimi());
         labelPakanTyyppi.setText(pakkarekisteri.etsiTyyppi(p.getTyyppi()));
         labelPakanMp.setText(p.getMuistiinpanot());
         naytaPakanKortit(p);
+        paivitaAktiivisuus();
     }
     
-   /**
+    /**
+     * Päivittää näkyvillä olevan pakan aktiivisuuden
+     */
+    private void paivitaAktiivisuus() {
+        if (pakkarekisteri.onkoAktiivinen(naytettavaPakka)) {
+            buttonAktivoi.setText("Aktiivinen");
+            buttonAktivoi.setTextFill(Color.GREEN);
+        } else {
+            buttonAktivoi.setText("AKTIVOI");
+            buttonAktivoi.setTextFill(Color.RED);
+        }
+    }
+
+
+    /**
     * Näyttää klikattuun pakkaan kuuluvat kortit. 
     * @param pakka Pakka jonka kortteja listataan
     */
@@ -304,26 +399,36 @@ public class PakkarekisteriGUIController implements Initializable {
         List<Linkki> linkit = pakkarekisteri.pakanLinkit(pakka.getID());
         for (Linkki l : linkit) {
             Kortti k = pakkarekisteri.getKortti(l.getKID());
-            String teksti = String.format(k.getNimi()+" (%d kpl)", l.getKk());
+            String teksti = String.format(k.getNimi() + " (%d kpl)", l.getKk());
             chooserKortit.add(teksti, k);
         }
-      /* List<Kortti> kortit = new ArrayList<Kortti>(pakkarekisteri.pakanKortit(pakka.getID()));
-        for (Kortti k : kortit) {
-            chooserKortit.add(k.getNimi(), k); //TODO: Näyttämään, kuinka monta kpl pakassa yhteensä
-        }*/
     }
-    
+
+
     /**
-     * Näyttää sen kortin tiedot, jonka nimeä on klikattu.
+     * Määrittää näytettävän kortin
+     * @param k Näytettävä kortti (jota on klikattu)
      */
-    private void naytaKortti() {
-        Kortti k = chooserKortit.getSelectedObject();
+    private void maaritaNaytettavaKortti() {
+        naytettavaKortti = chooserKortit.getSelectedObject();
+        naytaKortti(naytettavaKortti);
+    }
+
+
+    /**
+     * Näyttää kortin tiedot.
+     * @param k Näytettävä kortti
+     */
+    private void naytaKortti(Kortti k) {
+        if (naytettavaKortti == null)
+            return;
         labelKortinNimi.setText(k.getNimi());
         labelKortinCmc.setText("Cmc: " + k.getCmc());
         labelKortinKpl.setText("Omistuksessa: " + k.getMaara() + " kpl");
         naytaKortinPakat(k);
     }
-    
+
+
     /**
      * Näyttää pakat, joihin kortti kuuluu
      * @param k Kortti
@@ -334,21 +439,14 @@ public class PakkarekisteriGUIController implements Initializable {
         List<Linkki> linkit = pakkarekisteri.kortinLinkit(k.getID());
         for (Linkki l : linkit) {
             Pakka p = pakkarekisteri.getPakka(l.getPID());
-            if (l.getKp() == 0) chooserKortinPakatFalse.add(p.getNimi(), p);
-            else{
-                String teksti = String.format("%s (%d kpl)",p.getNimi(), l.getKp());
+            if (l.getKp() == 0)
+                chooserKortinPakatFalse.add(p.getNimi(), p);
+            else {
+                String teksti = String.format("%s (%d kpl)", p.getNimi(),
+                        l.getKp());
                 chooserKortinPakatTrue.add(teksti, p);
             }
         }
-        
-     /*   List<Pakka> pakatTrue = new ArrayList<Pakka>(pakkarekisteri.kortinPakat(k.getID(), true));
-        List<Pakka> pakatFalse = new ArrayList<Pakka>(pakkarekisteri.kortinPakat(k.getID(), false));
-            for (Pakka p : pakatTrue) {
-                chooserKortinPakatTrue.add(p.getNimi(), p);
-            }
-            for (Pakka p : pakatFalse) {
-                chooserKortinPakatFalse.add(p.getNimi(), p);
-            }*/
-        }
-    }
 
+    }
+}

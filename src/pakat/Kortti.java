@@ -9,7 +9,7 @@ import java.io.PrintStream;
  * @version 24.2.2021
  *
  */
-public class Kortti {
+public class Kortti implements Cloneable {
 
     private int kid;
     private String nimi = "";
@@ -37,6 +37,37 @@ public class Kortti {
         this.nimi = korjattu;
         this.maara = maara;
         this.cmc = cmc;
+    }
+    
+    
+    /**
+     * Kortin tietojen muokkaaminen
+     * @param mj Uusi nimi
+     * @param lkm Uusi maara
+     * @param mana Uusi cmc
+     */
+    public void muokkaa(String mj, int lkm, int mana) {
+        String korjattu = Tarkistus.mjTarkistus(mj);
+        nimi = korjattu;
+        maara = lkm;
+        cmc = mana;
+    }
+    
+    /**
+     * Kortin tietojen muokkaaminen
+     * @param kortti jonka tiedot kopioidaan tälle kortille
+     */
+    public void muokkaa(Kortti kortti) {
+        nimi = kortti.getNimi();
+        maara = kortti.getMaara();
+        cmc = kortti.getCmc();
+    }
+    
+    @Override
+    public Kortti clone() {
+        Kortti klooni =  new Kortti(this.getNimi(), this.getMaara(), this.getCmc());
+        klooni.kid = kid;
+        return klooni;
     }
     
     /**

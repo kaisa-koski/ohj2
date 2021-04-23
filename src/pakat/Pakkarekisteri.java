@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * @author Kaisa Koski
- * @version 16.3.2021
+ * @version 23.4.2021
  *
  */
 public class Pakkarekisteri {
@@ -60,6 +60,16 @@ public class Pakkarekisteri {
     public Pakka anna(int i) {
         return pakat.anna(i);
     }
+    
+    /**
+     * Palauttaa annetulla merkkijonolla alkavan
+     * kortin, jos sellainen löytyy.
+     * @param nimi Kortin nimi/nimen alkuosa
+     * @return Kortti oikealal nimellä
+     */
+    public Kortti anna(String nimi) {
+        return kortit.anna(nimi);
+    }
 
 
     /**
@@ -70,7 +80,6 @@ public class Pakkarekisteri {
         this.kortit.lisaa(kortti);
         this.linkit.lisaaEiPakassa(kortti.getID(),kortti.getMaara());
     }
-
     
     /**
      * Uuden pakan lisääminen
@@ -80,6 +89,46 @@ public class Pakkarekisteri {
         this.pakat.lisaa(pakka);
     }
     
+    
+    /**
+     * Uuden linkin lisääminen
+     * @param linkki Lisättävä linkki
+     */
+    public void lisaa(Linkki linkki) {
+        linkit.lisaa(linkki);
+    }
+    
+    
+    /**
+     * Kortin poistaminen
+     * @param kortti Poistettava kortti
+     */
+    public void poista(Kortti kortti) {
+        int kid = kortti.getID();
+        kortit.poista(kortti);
+        linkit.poistaKortinLinkit(kid);
+    }
+    
+    /**
+     * Pakan poistaminen
+     * @param pakka Poistettava pakka
+     */
+    public void poista(Pakka pakka) {
+        int pid = pakka.getID();
+        pakat.poista(pakka);
+        linkit.poistaPakanLinkit(pid);
+    }
+    
+    /**
+     * Poistaa pakan ja kortin linkin. Siirtää tarvittaessa pakassa
+     * sijainneet kortit korttivarastoon.
+     * @param pakka Pakka 
+     * @param kortti Kortti
+     */
+    public void poista(Pakka pakka, Kortti kortti) {
+        linkit.poista(pakka.getID(), kortti.getID());
+    }
+
 
     /**
      * Lisää kortin pakkaan eli luo uuden linkin pakan ja kortin
@@ -93,6 +142,20 @@ public class Pakkarekisteri {
         this.linkit.lisaa(linkki);
     }
     
+    /**
+     * Asettaa korttien muokattu -muuttujan todeksi
+     */
+    public void korttiaMuokattu() {
+        kortit.muokattu();
+    }
+    
+    /**
+     * Asettaa pakkojen muokattu -muuttujan todeksi
+     */
+    public void pakkaaMuokattu() {
+        pakat.muokattu();
+    }
+    
     
     /**
      * Palauttaa tyypin merkkijonon id:n perusteella.
@@ -101,6 +164,17 @@ public class Pakkarekisteri {
      */
     public String etsiTyyppi(int tid) {
         return tyypit.etsi(tid);
+    }
+    
+    
+    /**
+     * Palauttaa tiedon pakan aktiivisuudesta = onko siinä
+     * kaikki tarvittavat kortit sillä hetkellä
+     * @param p Pakka
+     * @return Onko pakka aktiivinen
+     */
+    public boolean onkoAktiivinen(Pakka p) {
+        return linkit.onkoAktiivinen(p.getID());
     }
     
     /**
@@ -145,23 +219,37 @@ public class Pakkarekisteri {
     
     
     /**
-     * Palauttaa korttilistan, joka sisältää pyydetyn pakan
-     * sisältämät kortit.
+     * Palauttaa korttilistan, joka sisältää joko pyydetyn pakan
+     * sisältämät kortit tai ne joita siinä ei ole ollenkaan.
      * @param pid Pakan indeksi
+     * @param kuuluuPakkaan Palautetaanko pakkaan kuuluvat vai ei-kuuluvat kortit
      * @return Korttilista pakan korteista
      */
-    public List<Kortti> pakanKortit(int pid){
-        List<Kortti> pakanKortit = new ArrayList<Kortti>();
+    public List<Kortti> pakanKortit(int pid, boolean kuuluuPakkaan) {
+        List<Kortti> pKortit = new ArrayList<Kortti>();
         List<Integer> kidLista = linkit.pakanKortit(pid);
-        for (Integer i : kidLista) {
-            for(Kortti k : kortit) {
-                if(i.equals(k.getID())) {
-                    pakanKortit.add(k);
-                    break;
+        if (kuuluuPakkaan) {
+            for (Integer i : kidLista) {
+                for (Kortti k : kortit) {
+                    if (i.equals(k.getID())) {
+                        pKortit.add(k);
+                        break;
+                    }
                 }
             }
+        } else {
+            for (Kortti k : kortit) {
+                boolean lisataanko = true;
+                for (Integer i : kidLista) {
+                    if (i.equals(k.getID())) {
+                        lisataanko = false;
+                        break;
+                    }
+                }
+                if (lisataanko) pKortit.add(k); //TODO: Ei ehkä toimi vielä halutulla tavalla!
+            }
         }
-        return pakanKortit;
+        return pKortit;
     }
     
     /**
@@ -202,13 +290,7 @@ public class Pakkarekisteri {
      * @param args ei käytössä
      */
     public static void main(String[] args) {
-        Pakkarekisteri rekisteri = new Pakkarekisteri();
-        Pakka p1 = new Pakka().izzetPakka();
-        rekisteri.lisaa(p1);
-        System.out.println(rekisteri.linkit);
-        rekisteri.tallenna();
-        rekisteri.linkit.lataa();
-        System.out.println(rekisteri.linkit);
+            //
     }
     
 

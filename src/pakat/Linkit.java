@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 /**
  * @author Kaisa Koski
- * @version 9.4.2021
+ * @version 23.4.2021
  * Sisältää id-tiedot pakkojen sisältämistä korteista ja antaat tämän tiedon pyydettäessä.
  * Pitää yllä tietoa korttien sijainneista ja pyynnöstä välittää sitä muille.
  * Huolehtii kortin lisäämisestä ja poistamisesta pakkaan (tallentaa sen id-numerotiedoilla).
@@ -33,7 +33,8 @@ public class Linkit implements Iterable<Linkki> {
     public Linkit() {
         //
     }
-    
+
+
     /**
      * Linkkien alustaminen 
      * @param tiedosto Tallennustiedoston nimi
@@ -53,11 +54,12 @@ public class Linkit implements Iterable<Linkki> {
      * Ladataan tiedot tiedostosta.
      */
     public void lataa() {
-        try (Scanner fi = new Scanner(new FileInputStream(new File(tiedosto)))) {
-            while ( fi.hasNext() ) {
+        try (Scanner fi = new Scanner(
+                new FileInputStream(new File(tiedosto)))) {
+            while (fi.hasNext()) {
                 try {
                     String s = fi.nextLine();
-                    Linkki linkki = new Linkki(); 
+                    Linkki linkki = new Linkki();
                     linkki.parse(s);
                     lisaa(linkki);
                 } catch (NumberFormatException | IndexOutOfBoundsException ex) {
@@ -68,6 +70,7 @@ public class Linkit implements Iterable<Linkki> {
             System.err.println("Tiedosto ei aukea! " + ex.getMessage());
             return;
         }
+        muutettu = false;
     }
 
 
@@ -75,9 +78,11 @@ public class Linkit implements Iterable<Linkki> {
      * Tallennetaan tiedot tiedostoon, jos on tullut muutoksia.
      */
     public void tallenna() {
-        if (!muutettu) return;
-        try (PrintStream fo = new PrintStream(new FileOutputStream(tiedosto, false))) {
-                fo.print(toString());
+        if (!muutettu)
+            return;
+        try (PrintStream fo = new PrintStream(
+                new FileOutputStream(tiedosto, false))) {
+            fo.print(toString());
         } catch (FileNotFoundException ex) {
             System.err.println("Tiedosto ei aukea: " + ex.getMessage());
         }
@@ -102,7 +107,7 @@ public class Linkit implements Iterable<Linkki> {
      * </pre>
      */
     public void lisaa(Linkki linkki) {
-        int kid = linkki.getKID();
+      /*  int kid = linkki.getKID();
         int montakoEiPakassa = this.eiPakassaLkm(kid);
         if (0 < montakoEiPakassa) {
             int pakkaanKuuluu = linkki.getKk();
@@ -113,10 +118,10 @@ public class Linkit implements Iterable<Linkki> {
                 uusiKp = pakkaanKuuluu;
             linkki.setKp(uusiKp);
             vahenna(EI_PAKASSA, kid, uusiKp); // Vähennetään Ei pakassa
-                                              // -sijaitsevien korttien määrää
+                                              // -sijaitsevien korttien määrää (NYT EI TOIMINNASSA)
                                               // TODO: Käyttäjän valinta
                                               // siirtyykö ei pakasta?
-        }
+        }*/
         linkki.rekisteroi();
         alkiot.add(linkki);
         muutettu = true;
@@ -128,13 +133,13 @@ public class Linkit implements Iterable<Linkki> {
      * @param kid Kortin ID
      * @param lkm Kortin lukumäärä
      */
-    public void lisaaEiPakassa(int kid, int lkm) {
+    public void lisaaEiPakassa(int kid, int lkm) {              //TODO: Saisiko niin, että ei loisi uusia linkkejä jos Korttivarastoon lisätään kortteja, joita siellä jo on?
         Linkki linkki = new Linkki(EI_PAKASSA, kid, lkm, lkm);
         linkki.rekisteroi();
         alkiot.add(linkki);
         muutettu = true;
     }
-
+    
 
     /**
      * Etsii pakan ja kortin id:llä oikean linkin ja poistaa sen.
@@ -169,9 +174,49 @@ public class Linkit implements Iterable<Linkki> {
                 } // TODO: Tulisiko käyttäjälle tästä jokin ilmoitus?
                 this.alkiot.remove(linkki);
                 muutettu = true;
-                return;
+                return; //TODO: Kysymys: Onko ok poistaa for-eachissa kun sitten poistutaan?
             }
         }
+    }
+
+
+    /**
+     * Poistaa kaikki kortin ID:llä olevat linkit
+     * @param kid Kortin ID
+     */
+    public void poistaKortinLinkit(int kid) {
+        Iterator<Linkki> iter = iterator();
+        while (iter.hasNext()) {
+            if (iter.next().getKID() == kid) iter.remove();
+        }
+        muutettu = true;
+    }
+
+
+    /**
+     * Poistaa kaikki pakan ID:llä olevat linkit. Jos korteilla sijainti
+     * kyseisessä pakassa, siirtyvät Korttivarastoon
+     * @param pid Pakan ID
+     */
+    public void poistaPakanLinkit(int pid) { //TODO: Mietin lisäyksen toimiminen!
+        List<Integer> lista = new ArrayList<Integer>();
+        Iterator<Linkki> iter = iterator();
+        while (iter.hasNext()) {
+            Linkki l = iter.next();
+            if (l.getPID() == pid) {
+               int kp = l.getKp();
+               int kid = l.getKID();
+             if (0 < kp){
+                 lista.add(kid);
+                 lista.add(kp);
+             }
+             iter.remove();
+            } 
+        }
+        for(int i = 0; i < lista.size(); i+=2) {
+            lisaaEiPakassa(lista.get(i), lista.get(i+1));
+        }
+        muutettu = true;
     }
 
 
@@ -354,21 +399,23 @@ public class Linkit implements Iterable<Linkki> {
         }
         return pidlista;
     }
-    
-    
+
+
     /**
      * Palauttaa luokan linkeistä, joilla on parametrina annettu
      * pakkaID.
      * @param pid Pakan ID
      * @return Linkkilista
      */
-    public List<Linkki> pakanLinkit(int pid){
-    List<Linkki> pakanLinkit = new ArrayList<Linkki>();
-    for (Linkki linkki : alkiot) {
-        if (linkki.getPID() == pid) pakanLinkit.add(linkki);
+    public List<Linkki> pakanLinkit(int pid) {
+        List<Linkki> pakanLinkit = new ArrayList<Linkki>();
+        for (Linkki linkki : alkiot) {
+            if (linkki.getPID() == pid)
+                pakanLinkit.add(linkki);
         }
-    return pakanLinkit;
+        return pakanLinkit;
     }
+
 
     /**
      * Palauttaa luokan linkeistä, joilla on parametrina annettu
@@ -376,14 +423,16 @@ public class Linkit implements Iterable<Linkki> {
      * @param kid Kortin id
      * @return Linkkilista
      */
-    public List<Linkki> kortinLinkit(int kid){
-    List<Linkki> kortinLinkit = new ArrayList<Linkki>();
-    for (Linkki linkki : alkiot) {
-        if (linkki.getKID() == kid) kortinLinkit.add(linkki);
+    public List<Linkki> kortinLinkit(int kid) {
+        List<Linkki> kortinLinkit = new ArrayList<Linkki>();
+        for (Linkki linkki : alkiot) {
+            if (linkki.getKID() == kid)
+                kortinLinkit.add(linkki);
         }
-    return kortinLinkit;
+        return kortinLinkit;
     }
-    
+
+
     /**
      * Palauttaa totuusarvon siitä, onko pakka aktiivinen, eli sijaitsevatko
      * kaikki pakkaan kuuluvat kortit sillä hetkellä pakassa.
@@ -411,6 +460,7 @@ public class Linkit implements Iterable<Linkki> {
         return true;
     }
 
+
     @Override
     /**
      * @example
@@ -423,7 +473,8 @@ public class Linkit implements Iterable<Linkki> {
      *  </pre>
      */
     public String toString() {
-        StringBuilder sb = new StringBuilder("lid|pid|kid| kpl nyt pakassa | kpl pakkaan kuuluu");
+        StringBuilder sb = new StringBuilder(
+                "lid|pid|kid| kpl nyt pakassa | kpl pakkaan kuuluu");
         for (Linkki l : alkiot) {
             sb.append("\n" + l.toString());
         }
@@ -437,7 +488,7 @@ public class Linkit implements Iterable<Linkki> {
      */
     public static void main(String[] args) {
 
-        Linkki l1 = new Linkki(2, 1, 2, 2); // Pakka nro 2, kortti 1
+      /*  Linkki l1 = new Linkki(2, 1, 2, 2); // Pakka nro 2, kortti 1
         Linkki l2 = new Linkki(2, 2, 2, 2); // Pakka nro 2, kortti 2
         Linkki l3 = new Linkki(3, 1, 0, 2); // Pakka nro 3, kortti 1
         Linkki l4 = new Linkki(3, 2, 1, 2); // Pakka nro 3, kortti 2
@@ -451,6 +502,6 @@ public class Linkit implements Iterable<Linkki> {
         List<Integer> pakat2 = linkit.kortinPakat(1, true);
         System.out.println(pakat2.toString());
         List<Integer> pakat3 = linkit.kortinPakat(1, false);
-        System.out.println(pakat3.toString());
+        System.out.println(pakat3.toString());*/
     }
 }
